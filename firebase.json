@@ -1,5 +1,6 @@
 {
   "hosting": {
+    "site": "vitoriayuri-casamento",
     "public": "public",
     "ignore": [
       "firebase.json",
