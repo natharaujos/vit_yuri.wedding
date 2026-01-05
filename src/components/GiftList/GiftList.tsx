@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom";
 import { collection, getDocs } from "firebase/firestore";
 import { db } from "../../../firebase";
 import { useLoading } from "../../contexts/LoadingContext";
-import Button from "../Button/Button";
 
 interface Gift {
   id: string;
