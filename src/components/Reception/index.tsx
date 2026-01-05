@@ -18,13 +18,13 @@ function Reception() {
         /> */}
 
         <div className="bg-white rounded-lg shadow-lg p-8 w-full max-w-2xl mt-8">
-          <h3 className="text-2xl font-bold text-[#3A3A3A] mb-4">
+          {/* <h3 className="text-2xl font-bold text-[#3A3A3A] mb-4">
             Comanda Individual
           </h3>
 
           <p className="text-xl font-semibold text-gray-800 mb-6">
             Valor por pessoa: R$ 80,00
-          </p>
+          </p> */}
 
           <div className="space-y-4 text-gray-700">
             <p className="font-medium">Cardápio:</p>
