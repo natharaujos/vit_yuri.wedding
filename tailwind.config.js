@@ -4,11 +4,12 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        moss: "#4B5320",
-        mossLight: "#8A9A5B",
-        mossDark: "#2C3220",
+        roseLight: "#FFB6C1",
+        roseMedium: "#FF69B4",
+        roseDark: "#C71585",
+        roseBlush: "#FFC0CB",
         // background
-        blushPeach: "#F4D4C1",
+        rosePeach: "#FFE4E1",
       },
       spacing: {
         128: "32rem", // e.g., class="w-128"

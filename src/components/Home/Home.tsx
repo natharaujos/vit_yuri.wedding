@@ -1,12 +1,9 @@
 import Button from "../Button/Button";
-import Countdown from "../Countdown/Countdown";
-import church from "../../assets/church.jfif";
 import { useState } from "react";
 import { ConfirmPresenceModal } from "../ConfirmPresence";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "../../../firebase";
 import { savePresenceConfirmation } from "../../services/savePresenceConfirmation";
-import main_pic from "../../assets/main_2-removebg-preview.png";
 
 function Home() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -16,14 +13,14 @@ function Home() {
     <section
       id="home"
       className="relative min-h-screen pt-20 pb-6 px-4 sm:px-6 md:px-8 
-                 bg-gradient-to-b from-[#F4D4C1] via-[#f9ede5] to-[#F4D4C1] 
+                 bg-gradient-to-b from-[#FFE4E1] via-[#FFF0F5] to-[#FFE4E1] 
                  overflow-hidden"
     >
       {/* Ornamentos no topo */}
       <div className="absolute top-0 left-0 w-full flex justify-center pointer-events-none">
         <svg
           xmlns="http://www.w3.org/2000/svg"
-          className="w-64 h-24 text-[#d4af7f]/40"
+          className="w-64 h-24 text-[#FF69B4]/40"
           fill="none"
           viewBox="0 0 120 40"
           stroke="currentColor"
@@ -36,12 +33,10 @@ function Home() {
 
       <div className="relative max-w-5xl mx-auto flex flex-col items-center text-center">
         {/* Foto principal com moldura */}
-        <div className="p-2 rounded-[2.5rem] border-4 border-[#d4af7f]/60 shadow-2xl bg-white/40 backdrop-blur-sm">
-          <img
-            src={main_pic}
-            alt="Casal"
-            className="w-64 h-64 sm:w-80 sm:h-80 md:w-[500px] md:h-[500px] object-cover rounded-3xl shadow-lg transition-transform duration-700 hover:scale-105"
-          />
+        <div className="p-2 rounded-[2.5rem] border-4 border-[#FF69B4]/60 shadow-2xl bg-white/40 backdrop-blur-sm">
+          <div className="w-64 h-64 sm:w-80 sm:h-80 md:w-[500px] md:h-[500px] rounded-3xl bg-gradient-to-br from-[#FFB6C1] to-[#FF69B4] shadow-lg flex items-center justify-center">
+            <span className="text-white text-2xl font-semibold">Vitória & Yuri</span>
+          </div>
         </div>
 
         <h1 className="text-3xl md:text-5xl font-bold text-[#3A3A3A] mt-8 tracking-tight">
@@ -68,22 +63,20 @@ function Home() {
         </h2>
 
         <div className="flex flex-col md:flex-row items-center gap-6 mt-6">
-          <img
-            src={church}
-            alt="Igreja"
-            className="rounded-2xl w-56 h-56 md:w-80 md:h-80 object-cover shadow-xl transition-transform duration-700 hover:scale-105"
-          />
+          <div className="rounded-2xl w-56 h-56 md:w-80 md:h-80 bg-gradient-to-br from-[#FFE4E1] to-[#FFB6C1] shadow-xl flex items-center justify-center">
+            <span className="text-[#C71585] text-lg font-semibold text-center px-4">Matriz N. S. de Oliveira</span>
+          </div>
 
           <div className="bg-white/70 backdrop-blur-md shadow-lg px-6 py-6 rounded-2xl text-left max-w-sm">
             <p className="text-lg text-gray-800">
-              <strong>Data:</strong> 25 de Outubro de 2025, às 10:00
+              <strong>Data:</strong> A definir
             </p>
             <p className="text-lg text-gray-800 mt-2">
-              <strong>Local:</strong> Santuário Nossa Senhora Aparecida
+              <strong>Horário:</strong> 10:00
             </p>
-            <div className="mt-6">
-              <Countdown targetDate="2025-10-25T17:00:00" />
-            </div>
+            <p className="text-lg text-gray-800 mt-2">
+              <strong>Local:</strong> Matriz Nossa Senhora de Oliveira, Centro
+            </p>
           </div>
         </div>
 
@@ -99,7 +92,7 @@ function Home() {
       <div className="absolute bottom-0 left-0 w-full flex justify-center rotate-180 pointer-events-none">
         <svg
           xmlns="http://www.w3.org/2000/svg"
-          className="w-64 h-24 text-[#d4af7f]/30"
+          className="w-64 h-24 text-[#FF69B4]/30"
           fill="none"
           viewBox="0 0 120 40"
           stroke="currentColor"

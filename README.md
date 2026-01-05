@@ -1,6 +1,6 @@
-# React + TypeScript + Vite
+# Site de Casamento - Vitória & Yuri
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Site moderno e elegante para o casamento da Vitória e do Yuri, desenvolvido com React, TypeScript e Vite.
 
 Currently, two official plugins are available:
 

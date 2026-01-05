@@ -41,30 +41,13 @@ function Reception() {
           </div>
         </div>
 
-        <div className="mt-8 bg-[#F4D4C1] rounded-lg p-6 w-full max-w-2xl">
+        <div className="mt-8 bg-[#FFE4E1] rounded-lg p-6 w-full max-w-2xl">
           <p className="text-gray-700 mb-4">
-            Por favor, confirme sua presença aqui no site e realize o pagamento
-            até dia 10/10/25 para que possamos colocar seu nome na lista.
+            Informações sobre a recepção serão divulgadas em breve.
           </p>
-
-          <div className="bg-white rounded-lg p-4 mb-6">
-            <p className="font-medium text-gray-800">Chave pix:</p>
-            <p className="text-[#3A3A3A]">37 99981-6852 (Magda Araujo)</p>
-          </div>
-
-          <div className="space-y-2 text-gray-700">
-            <p className="font-medium">
-              Enviar comprovante para um dos noivos:
-            </p>
-            <p>Magda: (37) 99981-6852</p>
-            <p>Paulo Victor: (37) 99860-4508</p>
-          </div>
-        </div>
-
-        <div className="mt-6 text-sm text-gray-600 space-y-2">
-          <p>Crianças até 7 anos não pagam</p>
-          <p>Crianças de 8 a 12 anos pagam 40,00</p>
-          <p>A partir de 13 anos, valor normal</p>
+          <p className="text-gray-700">
+            Por favor, acompanhe as atualizações neste site!
+          </p>
         </div>
 
         <p className="mt-8 text-lg font-medium text-gray-700">
