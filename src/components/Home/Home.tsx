@@ -33,27 +33,36 @@ function Home() {
     >
       <DecorativeOrnament position="top" />
 
-      <div className="relative max-w-6xl mx-auto flex flex-col items-center">
-        {/* Foto principal */}
-        <MainPhotoFrame />
-
-        {/* Título principal com estilo mais elegante */}
-        <h1 className="text-4xl md:text-6xl font-bold text-[#3A3A3A] mt-12 tracking-tight text-center">
+      <div className="relative max-w-6xl mx-auto">
+        {/* Título principal no topo */}
+        <h1 className="text-4xl md:text-6xl font-bold text-[#3A3A3A] mb-16 tracking-tight text-center">
           Bem-vindos ao nosso
           <span className="block text-[#B24C60] mt-2">Casamento</span>
         </h1>
 
-        {/* Mensagem de boas-vindas */}
-        <WelcomeMessage />
+        {/* Container com foto à esquerda e mensagem à direita */}
+        <div className="flex flex-col lg:flex-row items-center lg:items-start gap-8 lg:gap-12 mb-16">
+          {/* Foto principal à esquerda */}
+          <div className="flex-shrink-0">
+            <MainPhotoFrame />
+          </div>
+
+          {/* Mensagem de boas-vindas à direita */}
+          <div className="flex-1 flex items-center">
+            <WelcomeMessage />
+          </div>
+        </div>
 
         {/* Detalhes da cerimônia */}
-        <CeremonyDetails />
+        <div className="flex flex-col items-center">
+          <CeremonyDetails />
 
-        {/* Botões de ação com novo estilo */}
-        <div className="mt-16 flex flex-col sm:flex-row gap-6 items-center justify-center">
-          <Button text="Nossa História" link="#historia" />
-          <Button text="Lista de Presentes" link="#presentes" />
-          <Button text="Confirme Presença" onClick={() => setIsModalOpen(true)} />
+          {/* Botões de ação */}
+          <div className="mt-16 flex flex-col sm:flex-row gap-6 items-center justify-center">
+            <Button text="Nossa História" link="#historia" />
+            <Button text="Lista de Presentes" link="#presentes" />
+            <Button text="Confirme Presença" onClick={() => setIsModalOpen(true)} />
+          </div>
         </div>
       </div>
 
