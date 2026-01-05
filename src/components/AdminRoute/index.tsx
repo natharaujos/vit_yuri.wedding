@@ -9,7 +9,7 @@ function AdminRoute({ children }: { children: React.ReactNode }) {
   if (loading) {
     return (
       <div className="flex justify-center items-center min-h-screen">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#D4AF7F]"></div>
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-pink-500"></div>
       </div>
     );
   }

@@ -13,7 +13,7 @@ function Home() {
     <section
       id="home"
       className="relative min-h-screen pt-20 pb-6 px-4 sm:px-6 md:px-8 
-                 bg-gradient-to-b from-[#FFE4E1] via-[#FFF0F5] to-[#FFE4E1] 
+                 bg-gradient-to-b from-white via-gray-50 to-white 
                  overflow-hidden"
     >
       {/* Ornamentos no topo */}
@@ -63,7 +63,7 @@ function Home() {
         </h2>
 
         <div className="flex flex-col md:flex-row items-center gap-6 mt-6">
-          <div className="rounded-2xl w-56 h-56 md:w-80 md:h-80 bg-gradient-to-br from-[#FFE4E1] to-[#FFB6C1] shadow-xl flex items-center justify-center">
+          <div className="rounded-2xl w-56 h-56 md:w-80 md:h-80 bg-gradient-to-br from-pink-200 to-pink-400 shadow-xl flex items-center justify-center">
             <span className="text-[#C71585] text-lg font-semibold text-center px-4">Matriz N. S. de Oliveira</span>
           </div>
 

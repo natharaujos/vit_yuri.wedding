@@ -137,7 +137,7 @@ export function ConfirmedGuests() {
               </ul>
             )}
 
-            <div className="bg-[#F4D4C1] text-[#D4AF7F] inline-block px-3 py-1 rounded-full font-medium">
+            <div className="bg-pink-100 text-pink-600 inline-block px-3 py-1 rounded-full font-medium">
               {guest.guestsCount}{" "}
               {guest.guestsCount === 1 ? "pessoa" : "pessoas"}
             </div>

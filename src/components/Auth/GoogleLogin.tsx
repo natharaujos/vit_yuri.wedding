@@ -58,7 +58,7 @@ function GoogleLogin({ onLogin }: GoogleLoginProps) {
             </p>
             <button
               onClick={handleGoogleLogin}
-              className="w-full bg-[#D4AF7F] hover:bg-[#c2966c] text-white font-semibold py-3 rounded-md transition shadow"
+              className="w-full bg-pink-500 hover:bg-pink-600 text-white font-semibold py-3 rounded-md transition shadow"
             >
               Tentar novamente
             </button>

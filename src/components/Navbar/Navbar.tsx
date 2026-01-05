@@ -105,7 +105,7 @@ function Navbar() {
                 link.onClick();
                 setIsOpen(false);
               }}
-              className="block py-2 text-gray-700 hover:text-[#D4AF7F]"
+              className="block py-2 text-gray-700 hover:text-pink-500"
             >
               {link.label}
             </button>

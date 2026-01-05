@@ -90,7 +90,7 @@ export function MyContributions() {
   if (loading) {
     return (
       <div className="flex justify-center items-center p-8">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#D4AF7F]"></div>
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-pink-500"></div>
       </div>
     );
   }
@@ -100,7 +100,7 @@ export function MyContributions() {
       case "approved":
         return "bg-green-100 text-green-700";
       case "pending":
-        return "bg-yellow-100 text-yellow-700";
+        return "bg-blue-100 text-blue-700";
       case "rejected":
       case "cancelled":
         return "bg-red-100 text-red-700";
@@ -122,7 +122,7 @@ export function MyContributions() {
 
   return (
     <section className="max-w-4xl mx-auto px-4 py-12">
-      <h2 className="text-2xl font-bold text-[#D4AF7F] text-center mb-8">
+      <h2 className="text-2xl font-bold text-pink-500 text-center mb-8">
         Minhas Contribuições
       </h2>
 
@@ -168,7 +168,7 @@ export function MyContributions() {
       <div className="flex justify-end">
         <Link
           to="/"
-          className="mt-8 inline-block px-6 py-3 bg-[#D4AF7F] text-white rounded-md hover:bg-[#F4D4C1] transition"
+          className="mt-8 inline-block px-6 py-3 bg-pink-500 text-white rounded-md hover:bg-pink-600 transition"
         >
           Voltar para a página inicial
         </Link>

@@ -136,7 +136,7 @@ function PaymentSuccess() {
         {validStatuses.includes(status as ValidStatus) && (
           <Link
             to="/"
-            className="mt-8 inline-block px-6 py-3 bg-[#D4AF7F] text-white rounded-md hover:bg-[#F4D4C1] transition"
+            className="mt-8 inline-block px-6 py-3 bg-pink-500 text-white rounded-md hover:bg-pink-600 transition"
           >
             Voltar para a página inicial
           </Link>

@@ -45,7 +45,7 @@ export default function GiftList() {
   if (loading)
     return (
       <div className="flex justify-center items-center py-16">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#D4AF7F]"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-pink-500"></div>
       </div>
     );
 
@@ -100,7 +100,7 @@ export default function GiftList() {
           className={`px-3 py-1 sm:px-4 sm:py-2 rounded-md text-sm sm:text-base ${
             currentPage === 1
               ? "bg-gray-300 cursor-not-allowed"
-              : "bg-[#D4AF7F] text-white hover:bg-[#F4D4C1]"
+              : "bg-pink-500 text-white hover:bg-pink-600"
           }`}
         >
           Prev
@@ -122,8 +122,8 @@ export default function GiftList() {
                   onClick={() => setCurrentPage(pageNum)}
                   className={`px-3 py-1 sm:px-4 sm:py-2 rounded-md text-sm sm:text-base ${
                     currentPage === pageNum
-                      ? "bg-[#F4D4C1] text-white"
-                      : "bg-[#D4AF7F] text-white hover:bg-[#F4D4C1]"
+                      ? "bg-pink-400 text-white"
+                      : "bg-pink-500 text-white hover:bg-pink-600"
                   }`}
                 >
                   {pageNum}
@@ -155,7 +155,7 @@ export default function GiftList() {
           className={`px-3 py-1 sm:px-4 sm:py-2 rounded-md text-sm sm:text-base ${
             currentPage === totalPages
               ? "bg-gray-300 cursor-not-allowed"
-              : "bg-[#D4AF7F] text-white hover:bg-[#F4D4C1]"
+              : "bg-pink-500 text-white hover:bg-pink-600"
           }`}
         >
           Next
