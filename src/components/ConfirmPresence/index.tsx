@@ -3,6 +3,7 @@ import { Dialog } from "@mui/material";
 import { collection, query, where, getDocs } from "firebase/firestore";
 import { auth, db } from "../../../firebase";
 import { useAuthState } from "react-firebase-hooks/auth";
+import Button from "../Button/Button";
 
 type ConfirmPresenceModalProps = {
   isOpen: boolean;
@@ -83,7 +84,7 @@ export function ConfirmPresenceModal({
       maxWidth="sm"
       fullWidth
       PaperProps={{
-        className: "p-6 rounded-lg",
+        className: "p-8 rounded-2xl shadow-2xl",
       }}
     >
       <form
@@ -92,23 +93,37 @@ export function ConfirmPresenceModal({
           handleConfirm();
         }}
       >
-        <div className="text-2xl font-bold text-wedding-500 text-center mb-6">
-          Confirmação de Presença
+        <div className="text-center mb-8">
+          <div className="flex items-center justify-center gap-3 mb-2">
+            <div className="h-px w-12 bg-gradient-to-r from-transparent to-[#B24C60]/50"></div>
+            <svg className="w-8 h-8 text-[#B24C60]" fill="currentColor" viewBox="0 0 20 20">
+              <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+            </svg>
+            <div className="h-px w-12 bg-gradient-to-l from-transparent to-[#B24C60]/50"></div>
+          </div>
+          <h2 className="text-3xl font-bold text-[#B24C60]">
+            Confirmação de Presença
+          </h2>
+          <p className="text-gray-500 text-sm mt-2">Por favor, preencha os dados abaixo</p>
         </div>
 
         <div className="space-y-6">
-          <div>
-            <span className="text-gray-700 font-medium">Seu e-mail:</span>
-            <p className="text-wedding-500 mt-1">{userEmail}</p>
+          <div className="bg-gradient-to-r from-[#F9E8EB] to-[#F3D1D6] p-4 rounded-xl">
+            <span className="text-gray-700 font-medium text-sm">Seu e-mail:</span>
+            <p className="text-[#B24C60] font-semibold mt-1">{userEmail}</p>
           </div>
 
           {loading ? (
-            <div className="text-center py-4">
-              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-wedding-500 mx-auto"></div>
+            <div className="text-center py-8">
+              <div className="animate-spin rounded-full h-12 w-12 border-4 border-[#F3D1D6] border-t-[#B24C60] mx-auto"></div>
+              <p className="text-gray-500 mt-4">Carregando...</p>
             </div>
           ) : alreadyConfirmed ? (
-            <div className="bg-wedding-50 border border-wedding-200 rounded-md p-4 text-wedding-800">
-              Você já confirmou sua presença anteriormente.
+            <div className="bg-gradient-to-r from-[#F9E8EB] to-[#F3D1D6] border-2 border-[#B24C60] rounded-xl p-6 text-center">
+              <svg className="w-12 h-12 text-[#B24C60] mx-auto mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              <p className="text-gray-800 font-semibold">Você já confirmou sua presença anteriormente.</p>
             </div>
           ) : (
             <div className="space-y-4">
@@ -116,7 +131,7 @@ export function ConfirmPresenceModal({
               <div className="w-full">
                 <label
                   htmlFor="guests"
-                  className="block text-gray-700 font-medium mb-2"
+                  className="block text-gray-800 font-semibold mb-3 text-lg"
                 >
                   Quantas pessoas vão na festa com você?
                 </label>
@@ -132,7 +147,7 @@ export function ConfirmPresenceModal({
                     onChange={(e) =>
                       handleGuestsCountChange(Number(e.target.value))
                     }
-                    className="w-80 px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-wedding-500 focus:border-wedding-500 disabled:bg-gray-100 disabled:cursor-not-allowed"
+                    className="w-80 px-4 py-2 border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#B24C60] focus:border-[#B24C60] disabled:bg-gray-100 disabled:cursor-not-allowed transition-all"
                   />
 
                   <label className="flex items-center space-x-2 text-gray-700">
@@ -158,7 +173,7 @@ export function ConfirmPresenceModal({
                 value={user?.displayName || ""}
                 required
                 disabled
-                className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-wedding-500 focus:border-wedding-500"
+                className="w-full px-4 py-2 border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#B24C60] focus:border-[#B24C60] bg-gray-50 font-medium"
               />
 
               {/* Guest names */}
@@ -174,7 +189,7 @@ export function ConfirmPresenceModal({
                         }
                         placeholder={`Nome do acompanhante ${index + 1}`}
                         required={guestsCount > 0} // ✅ required on each guest
-                        className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-wedding-500 focus:border-wedding-500"
+                        className="w-full px-4 py-2 border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#B24C60] focus:border-[#B24C60] transition-all"
                       />
                     </div>
                   ))}
@@ -184,21 +199,18 @@ export function ConfirmPresenceModal({
           )}
         </div>
 
-        <div className="flex justify-end space-x-3 mt-8">
-          <button
+        <div className="flex justify-end space-x-4 mt-8 pt-6 border-t border-gray-200">
+          <Button
             type="button"
             onClick={onClose}
-            className="px-4 py-2 text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200 transition-colors duration-200"
-          >
-            {alreadyConfirmed ? "Fechar" : "Cancelar"}
-          </button>
+            text={alreadyConfirmed ? "Fechar" : "Cancelar"}
+            variant="secondary"
+          />
           {!alreadyConfirmed && (
-            <button
-              type="submit" // ✅ now handled by the form
-              className="px-4 py-2 text-white bg-wedding-500 rounded-md hover:bg-wedding-600 transition-colors duration-200 cursor-pointer"
-            >
-              Confirmar Presença
-            </button>
+            <Button
+              type="submit"
+              text="Confirmar Presença"
+            />
           )}
         </div>
       </form>

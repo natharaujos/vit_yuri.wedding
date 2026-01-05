@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { collection, getDocs } from "firebase/firestore";
 import { db } from "../../../firebase";
 import { useLoading } from "../../contexts/LoadingContext";
+import Button from "../Button/Button";
 
 interface Gift {
   id: string;
@@ -79,16 +80,14 @@ export default function GiftList() {
               </p>
             </div>
 
-            <button
+            <Button
               onClick={() => {
                 setLoadingWithDelay(true);
                 navigate(`/gift/${id}`);
                 setLoadingWithDelay(false);
               }}
-              className="px-6 py-3 bg-[#B24C60] text-white font-semibold rounded-2xl shadow-md hover:bg-[#CE6375] transition cursor-pointer"
-            >
-              Presentear
-            </button>
+              text="Presentear"
+            />
           </div>
         ))}
       </div>
