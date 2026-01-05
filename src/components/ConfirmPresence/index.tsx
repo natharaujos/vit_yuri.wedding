@@ -92,22 +92,22 @@ export function ConfirmPresenceModal({
           handleConfirm();
         }}
       >
-        <div className="text-2xl font-bold text-[#D4AF7F] text-center mb-6">
+        <div className="text-2xl font-bold text-wedding-500 text-center mb-6">
           Confirmação de Presença
         </div>
 
         <div className="space-y-6">
           <div>
             <span className="text-gray-700 font-medium">Seu e-mail:</span>
-            <p className="text-[#D4AF7F] mt-1">{userEmail}</p>
+            <p className="text-wedding-500 mt-1">{userEmail}</p>
           </div>
 
           {loading ? (
             <div className="text-center py-4">
-              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#D4AF7F] mx-auto"></div>
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-wedding-500 mx-auto"></div>
             </div>
           ) : alreadyConfirmed ? (
-            <div className="bg-yellow-50 border border-yellow-200 rounded-md p-4 text-yellow-800">
+            <div className="bg-wedding-50 border border-wedding-200 rounded-md p-4 text-wedding-800">
               Você já confirmou sua presença anteriormente.
             </div>
           ) : (
@@ -132,7 +132,7 @@ export function ConfirmPresenceModal({
                     onChange={(e) =>
                       handleGuestsCountChange(Number(e.target.value))
                     }
-                    className="w-80 px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#D4AF7F] focus:border-[#D4AF7F] disabled:bg-gray-100 disabled:cursor-not-allowed"
+                    className="w-80 px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-wedding-500 focus:border-wedding-500 disabled:bg-gray-100 disabled:cursor-not-allowed"
                   />
 
                   <label className="flex items-center space-x-2 text-gray-700">
@@ -158,7 +158,7 @@ export function ConfirmPresenceModal({
                 value={user?.displayName || ""}
                 required
                 disabled
-                className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#D4AF7F] focus:border-[#D4AF7F]"
+                className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-wedding-500 focus:border-wedding-500"
               />
 
               {/* Guest names */}
@@ -174,7 +174,7 @@ export function ConfirmPresenceModal({
                         }
                         placeholder={`Nome do acompanhante ${index + 1}`}
                         required={guestsCount > 0} // ✅ required on each guest
-                        className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#D4AF7F] focus:border-[#D4AF7F]"
+                        className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-wedding-500 focus:border-wedding-500"
                       />
                     </div>
                   ))}
@@ -195,7 +195,7 @@ export function ConfirmPresenceModal({
           {!alreadyConfirmed && (
             <button
               type="submit" // ✅ now handled by the form
-              className="px-4 py-2 text-white bg-[#D4AF7F] rounded-md hover:bg-[#F4D4C1] transition-colors duration-200 cursor-pointer"
+              className="px-4 py-2 text-white bg-wedding-500 rounded-md hover:bg-wedding-600 transition-colors duration-200 cursor-pointer"
             >
               Confirmar Presença
             </button>

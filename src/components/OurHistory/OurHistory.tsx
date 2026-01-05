@@ -34,7 +34,7 @@ function OurHistory({
             ))}
           </div>
         ) : (
-          <div className="bg-gradient-to-br from-[#FFB6C1] to-[#FF69B4] rounded-lg p-12 w-full max-w-2xl flex items-center justify-center">
+          <div className="bg-gradient-to-br from-[#CE6375] to-[#B24C60] rounded-lg p-12 w-full max-w-2xl flex items-center justify-center">
             <p className="text-white text-xl text-center">Fotos em breve...</p>
           </div>
         )}

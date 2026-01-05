@@ -41,7 +41,7 @@ function Reception() {
           </div>
         </div>
 
-        <div className="mt-8 bg-pink-50 rounded-lg p-6 w-full max-w-2xl">
+        <div className="mt-8 bg-wedding-50 rounded-lg p-6 w-full max-w-2xl">
           <p className="text-gray-700 mb-4">
             Informações sobre a recepção serão divulgadas em breve.
           </p>

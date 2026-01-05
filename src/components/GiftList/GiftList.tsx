@@ -45,7 +45,7 @@ export default function GiftList() {
   if (loading)
     return (
       <div className="flex justify-center items-center py-16">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-pink-500"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-wedding-500"></div>
       </div>
     );
 
@@ -75,19 +75,21 @@ export default function GiftList() {
               <h3 className="text-lg font-semibold text-gray-800 mb-2 text-center">
                 {title}
               </h3>
-              <p className="text-[#D4AF7F] font-bold mb-4">
+              <p className="text-wedding-500 font-bold mb-4">
                 R$ {price.toFixed(2)}
               </p>
             </div>
 
-            <Button
+            <button
               onClick={() => {
                 setLoadingWithDelay(true);
                 navigate(`/gift/${id}`);
                 setLoadingWithDelay(false);
               }}
-              text="Presentear"
-            />
+              className="px-6 py-3 bg-[#B24C60] text-white font-semibold rounded-2xl shadow-md hover:bg-[#CE6375] transition cursor-pointer"
+            >
+              Presentear
+            </button>
           </div>
         ))}
       </div>
@@ -100,7 +102,7 @@ export default function GiftList() {
           className={`px-3 py-1 sm:px-4 sm:py-2 rounded-md text-sm sm:text-base ${
             currentPage === 1
               ? "bg-gray-300 cursor-not-allowed"
-              : "bg-pink-500 text-white hover:bg-pink-600"
+              : "bg-[#B24C60] text-white hover:bg-[#CE6375] cursor-pointer"
           }`}
         >
           Prev
@@ -120,10 +122,10 @@ export default function GiftList() {
                 <button
                   key={pageNum}
                   onClick={() => setCurrentPage(pageNum)}
-                  className={`px-3 py-1 sm:px-4 sm:py-2 rounded-md text-sm sm:text-base ${
+                  className={`px-3 py-1 sm:px-4 sm:py-2 rounded-md text-sm sm:text-base cursor-pointer ${
                     currentPage === pageNum
-                      ? "bg-pink-400 text-white"
-                      : "bg-pink-500 text-white hover:bg-pink-600"
+                      ? "bg-[#AF5C78] text-white"
+                      : "bg-[#B24C60] text-white hover:bg-[#CE6375]"
                   }`}
                 >
                   {pageNum}
@@ -155,7 +157,7 @@ export default function GiftList() {
           className={`px-3 py-1 sm:px-4 sm:py-2 rounded-md text-sm sm:text-base ${
             currentPage === totalPages
               ? "bg-gray-300 cursor-not-allowed"
-              : "bg-pink-500 text-white hover:bg-pink-600"
+              : "bg-[#B24C60] text-white hover:bg-[#CE6375] cursor-pointer"
           }`}
         >
           Next

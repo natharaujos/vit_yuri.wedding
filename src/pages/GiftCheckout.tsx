@@ -140,7 +140,7 @@ function GiftCheckout() {
       <button
         onClick={handlePayment}
         disabled={loading}
-        className="bg-pink-500 text-white px-6 py-3 rounded-md hover:bg-pink-600 transition disabled:opacity-50"
+        className="bg-wedding-500 text-white px-6 py-3 rounded-md hover:bg-wedding-600 transition disabled:opacity-50"
       >
         {loading ? "Redirecionando..." : "Contribuir com este presente"}
       </button>

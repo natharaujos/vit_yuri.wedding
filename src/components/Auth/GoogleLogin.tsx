@@ -45,7 +45,7 @@ function GoogleLogin({ onLogin }: GoogleLoginProps) {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#F4D4C1] to-[#D4AF7F] px-4">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-wedding-100 via-wedding-100 to-wedding-200 px-4">
       <div className="bg-white rounded-lg shadow-xl max-w-sm w-full p-8 text-center animate-fadeIn">
         {error ? (
           <>
@@ -58,14 +58,14 @@ function GoogleLogin({ onLogin }: GoogleLoginProps) {
             </p>
             <button
               onClick={handleGoogleLogin}
-              className="w-full bg-pink-500 hover:bg-pink-600 text-white font-semibold py-3 rounded-md transition shadow"
+              className="w-full bg-wedding-500 hover:bg-wedding-600 text-white font-semibold py-3 rounded-md transition shadow"
             >
               Tentar novamente
             </button>
           </>
         ) : (
           <>
-            <h2 className="text-3xl font-bold text-[#D4AF7F] mb-6">
+            <h2 className="text-3xl font-bold text-[#B24C60] mb-6">
               Entrar com Google
             </h2>
             <button

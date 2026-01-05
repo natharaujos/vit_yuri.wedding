@@ -12,7 +12,7 @@ export function DecorativeOrnament({ position }: DecorativeOrnamentProps) {
       <svg
         xmlns="http://www.w3.org/2000/svg"
         className={`w-64 h-24 ${
-          position === "top" ? "text-[#FF69B4]/40" : "text-[#FF69B4]/30"
+          position === "top" ? "text-[#B24C60]/40" : "text-[#B24C60]/30"
         }`}
         fill="none"
         viewBox="0 0 120 40"

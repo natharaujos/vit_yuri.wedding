@@ -95,7 +95,7 @@ function AllContributions() {
       case "approved":
         return "bg-green-100 text-green-700";
       case "pending":
-        return "bg-yellow-100 text-yellow-700";
+        return "bg-wedding-100 text-wedding-700";
       case "rejected":
       case "cancelled":
         return "bg-red-100 text-red-700";
@@ -132,23 +132,23 @@ function AllContributions() {
   if (loading) {
     return (
       <div className="flex justify-center items-center p-8">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#D4AF7F]"></div>
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-wedding-500"></div>
       </div>
     );
   }
 
   return (
     <section className="max-w-6xl mx-auto px-4 py-12">
-      <h2 className="text-2xl font-bold text-[#D4AF7F] text-center mb-8">
+      <h2 className="text-2xl font-bold text-wedding-500 text-center mb-8">
         Todos os Presentes
       </h2>
 
       <div className="bg-white rounded-lg shadow p-4 mb-8">
         <h3 className="text-lg font-semibold text-gray-700 mb-2">Resumo</h3>
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-          <div className="bg-[#F4D4C1] p-4 rounded-lg">
+          <div className="bg-wedding-50 p-4 rounded-lg">
             <p className="text-sm text-gray-600">Total de Presentes</p>
-            <p className="text-2xl font-bold text-[#D4AF7F]">
+            <p className="text-2xl font-bold text-wedding-500">
               {payments.length}
             </p>
           </div>

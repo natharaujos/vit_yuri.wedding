@@ -90,7 +90,7 @@ function PaymentSuccess() {
 
       {status === "pending" && (
         <>
-          <h1 className="text-2xl font-bold text-yellow-600">
+          <h1 className="text-2xl font-bold text-wedding-500">
             Pagamento em análise
           </h1>
           <p className="text-gray-600 mt-2">
@@ -136,7 +136,7 @@ function PaymentSuccess() {
         {validStatuses.includes(status as ValidStatus) && (
           <Link
             to="/"
-            className="mt-8 inline-block px-6 py-3 bg-pink-500 text-white rounded-md hover:bg-pink-600 transition"
+            className="mt-8 inline-block px-6 py-3 bg-wedding-500 text-white rounded-md hover:bg-wedding-600 transition"
           >
             Voltar para a página inicial
           </Link>
@@ -144,7 +144,7 @@ function PaymentSuccess() {
 
         <Link
           to="/my-contributions"
-          className="mt-8 inline-block px-6 py-3 bg-[#D4AF7F] text-white rounded-md hover:bg-[#F4D4C1] transition"
+          className="mt-8 inline-block px-6 py-3 bg-wedding-500 text-white rounded-md hover:bg-wedding-600 transition"
         >
           Ir para Minhas Contribuições
         </Link>

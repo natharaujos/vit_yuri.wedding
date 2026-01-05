@@ -28,7 +28,7 @@ function Home() {
     <section
       id="home"
       className="relative min-h-screen pt-16 pb-12 px-4 sm:px-6 md:px-8 
-                 bg-gradient-to-b from-rose-50/30 via-white to-pink-50/30
+                 bg-gradient-to-b from-wedding-50/30 via-white to-wedding-50/30
                  overflow-hidden"
     >
       <DecorativeOrnament position="top" />
@@ -40,7 +40,7 @@ function Home() {
         {/* Título principal com estilo mais elegante */}
         <h1 className="text-4xl md:text-6xl font-bold text-[#3A3A3A] mt-12 tracking-tight text-center">
           Bem-vindos ao nosso
-          <span className="block text-[#FF69B4] mt-2">Casamento</span>
+          <span className="block text-[#B24C60] mt-2">Casamento</span>
         </h1>
 
         {/* Mensagem de boas-vindas */}

@@ -3,11 +3,11 @@ const StyledLoading = () => (
     <div className="relative flex flex-col items-center">
       <div className="w-16 h-16 relative">
         {/* Outer circle - static */}
-        <div className="absolute inset-0 rounded-full border-4 border-pink-200/30"></div>
+        <div className="absolute inset-0 rounded-full border-4 border-wedding-200/30"></div>
         {/* Inner circle - spinning */}
-        <div className="absolute inset-0 rounded-full border-4 border-transparent border-t-pink-500 animate-spin duration-700"></div>
+        <div className="absolute inset-0 rounded-full border-4 border-transparent border-t-wedding-500 animate-spin duration-700"></div>
       </div>
-      <span className="mt-4 text-pink-500 font-medium">Carregando...</span>
+      <span className="mt-4 text-wedding-500 font-medium">Carregando...</span>
     </div>
   </div>
 );

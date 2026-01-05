@@ -10,11 +10,11 @@ function Button({ text, link, onClick, type = "button" }: ButtonProps) {
 
   const baseStyles = `
     inline-block px-6 py-3 
-    bg-pink-500 text-white  
+    bg-[#B24C60] text-white  
     font-semibold rounded-2xl 
-    shadow-md hover:bg-pink-600 border-1 border-pink-500
+    shadow-md hover:bg-[#CE6375] border border-[#B24C60]
     transition duration-300 ease-in-out
-    text-center
+    text-center cursor-pointer
   `;
 
   if (link) {

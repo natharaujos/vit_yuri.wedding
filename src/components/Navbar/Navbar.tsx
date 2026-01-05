@@ -64,7 +64,7 @@ function Navbar() {
           {/* Logo / Nome dos noivos */}
           <a
             href="#home"
-            className="text-2xl font-bold text-[#FF69B4] cursor-pointer"
+            className="text-2xl font-bold text-[#B24C60] cursor-pointer"
             onClick={() => navigate("/")}
           >
             Vitória & Yuri
@@ -86,7 +86,7 @@ function Navbar() {
           {navLinks.map((link) => (
             <button
               key={link.label}
-              className="text-gray-700 hover:text-[#FF69B4] transition font-medium cursor-pointer"
+              className="text-gray-700 hover:text-[#B24C60] transition font-medium cursor-pointer"
               onClick={link.onClick}
             >
               {link.label}
@@ -105,7 +105,7 @@ function Navbar() {
                 link.onClick();
                 setIsOpen(false);
               }}
-              className="block py-2 text-gray-700 hover:text-pink-500"
+              className="block py-2 text-gray-700 hover:text-wedding-500"
             >
               {link.label}
             </button>

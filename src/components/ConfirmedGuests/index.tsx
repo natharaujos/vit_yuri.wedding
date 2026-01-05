@@ -91,21 +91,21 @@ export function ConfirmedGuests() {
   if (loading) {
     return (
       <div className="flex justify-center items-center p-8">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#D4AF7F]"></div>
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-wedding-500"></div>
       </div>
     );
   }
 
   return (
     <section className="max-w-4xl mx-auto px-4 py-12">
-      <h2 className="text-2xl font-bold text-[#D4AF7F] text-center mb-8">
+      <h2 className="text-2xl font-bold text-wedding-500 text-center mb-8">
         Presenças Confirmadas
       </h2>
 
       <div className="bg-white rounded-lg shadow-lg p-6 mb-8">
         <p className="text-center text-lg font-medium text-gray-700">
           Total de Convidados Confirmados:
-          <span className="text-[#D4AF7F] ml-2">{totalGuests}</span>
+          <span className="text-wedding-500 ml-2">{totalGuests}</span>
         </p>
       </div>
 
@@ -137,7 +137,7 @@ export function ConfirmedGuests() {
               </ul>
             )}
 
-            <div className="bg-pink-100 text-pink-600 inline-block px-3 py-1 rounded-full font-medium">
+            <div className="bg-wedding-100 text-wedding-600 inline-block px-3 py-1 rounded-full font-medium">
               {guest.guestsCount}{" "}
               {guest.guestsCount === 1 ? "pessoa" : "pessoas"}
             </div>
