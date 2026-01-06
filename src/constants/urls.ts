@@ -1,1 +1,1 @@
-export const MT_API = "https://vy-backend.vercel.app";
+export const VY_API = "https://vy-backend.vercel.app";
