@@ -6,6 +6,7 @@ import { auth } from "../../../firebase";
 import admins from "../../constants/admins";
 import { getAuth, signOut } from "firebase/auth";
 import { Dialog } from "@mui/material";
+import Button from "../Button/Button";
 
 function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -125,15 +126,14 @@ function Navbar() {
         <p className="text-gray-600 mb-6">Logout realizado com sucesso!</p>
 
         <div className="flex justify-end space-x-3">
-          <button
+          <Button
+            text="Ok"
             onClick={() => {
               setConfirmOpen(false);
               navigate("/login", { replace: true });
             }}
-            className="px-4 py-2 text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200 transition-colors duration-200"
-          >
-            Ok
-          </button>
+            variant="secondary"
+          />
         </div>
       </Dialog>
     </nav>

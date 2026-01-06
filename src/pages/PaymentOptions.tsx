@@ -1,6 +1,7 @@
 import { useLocation } from "react-router-dom";
 import { useState } from "react";
 import { VY_API } from "../constants/urls";
+import Button from "../components/Button/Button";
 
 export type LocationState = {
   docRefId: string;
@@ -52,13 +53,13 @@ export default function PaymentOptions() {
         <p className="mb-6">
           <strong>{giftTitle}</strong> — R$ {giftPrice.toFixed(2)}
         </p>
-        <button
-          onClick={handlePix}
-          disabled={loading}
-          className="w-full mb-4 bg-green-500 text-white py-2 rounded hover:bg-green-600 transition disabled:opacity-50"
-        >
-          {loading ? "Aguarde…" : "Presentear"}
-        </button>
+        <div className="w-full mb-4">
+          <Button
+            text={loading ? "Aguarde…" : "Presentear"}
+            onClick={handlePix}
+            disabled={loading}
+          />
+        </div>
       </div>
     </div>
   );

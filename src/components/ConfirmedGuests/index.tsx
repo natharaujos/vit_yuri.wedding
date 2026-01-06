@@ -12,6 +12,7 @@ import { db, auth } from "../../../firebase"; // certifique-se de exportar auth 
 import { Dialog } from "@mui/material";
 import admins from "../../constants/admins";
 import RemoveButton from "../RemoveButton";
+import Button from "../Button/Button";
 
 interface ConfirmedGuest {
   id: string;
@@ -179,18 +180,15 @@ export function ConfirmedGuests() {
         </p>
 
         <div className="flex justify-end space-x-3">
-          <button
+          <Button
+            text="Cancelar"
             onClick={() => setConfirmOpen(false)}
-            className="px-4 py-2 text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200 transition-colors duration-200"
-          >
-            Cancelar
-          </button>
-          <button
+            variant="secondary"
+          />
+          <Button
+            text="Remover"
             onClick={handleDelete}
-            className="px-4 py-2 text-white bg-red-600 rounded-md hover:bg-red-700 transition-colors duration-200"
-          >
-            Remover
-          </button>
+          />
         </div>
       </Dialog>
     </section>

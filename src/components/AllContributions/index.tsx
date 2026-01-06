@@ -11,6 +11,7 @@ import {
 import { db } from "../../../firebase";
 import { checkPaymentStatus } from "../../services/checkPaymentStatus";
 import { Dialog } from "@mui/material";
+import Button from "../Button/Button";
 
 interface Payment {
   id?: string;
@@ -199,15 +200,16 @@ function AllContributions() {
             >
               {getStatusText(payment.status)}
             </div>
-            <button
-              onClick={() => {
-                setSelectedPaymentId(payment.id || "");
-                setConfirmOpen(true);
-              }}
-              className="absolute bottom-2 right-5 px-3 py-1 text-sm font-medium text-white bg-red-500 rounded-md shadow hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-400 transition-colors duration-200 cursor-pointer"
-            >
-              Remover
-            </button>
+            <div className="absolute bottom-2 right-5">
+              <Button
+                text="Remover"
+                onClick={() => {
+                  setSelectedPaymentId(payment.id || "");
+                  setConfirmOpen(true);
+                }}
+                variant="secondary"
+              />
+            </div>
           </div>
         ))}
 
@@ -237,18 +239,15 @@ function AllContributions() {
         </p>
 
         <div className="flex justify-end space-x-3">
-          <button
+          <Button
+            text="Cancelar"
             onClick={() => setConfirmOpen(false)}
-            className="px-4 py-2 text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200 transition-colors duration-200"
-          >
-            Cancelar
-          </button>
-          <button
+            variant="secondary"
+          />
+          <Button
+            text="Remover"
             onClick={handleDelete}
-            className="px-4 py-2 text-white bg-red-600 rounded-md hover:bg-red-700 transition-colors duration-200"
-          >
-            Remover
-          </button>
+          />
         </div>
       </Dialog>
     </section>
