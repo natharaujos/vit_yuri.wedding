@@ -1,0 +1,30 @@
+<svg width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Fundo gradiente com as cores do casamento -->
+  <defs>
+    <linearGradient id="bg-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#F9E8EB;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#E8A5AC;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="text-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#B24C60;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#CE6375;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Fundo circular -->
+  <circle cx="256" cy="256" r="256" fill="url(#bg-gradient)"/>
+  
+  <!-- Círculo interno decorativo -->
+  <circle cx="256" cy="256" r="200" fill="white" opacity="0.95"/>
+  
+  <!-- Corações decorativos pequenos no topo -->
+  <path d="M 220 140 C 220 125, 210 115, 195 115 C 180 115, 170 125, 170 140 C 170 160, 195 175, 220 195 C 245 175, 270 160, 270 140 C 270 125, 260 115, 245 115 C 230 115, 220 125, 220 140 Z" fill="#B24C60" opacity="0.4"/>
+  
+  <path d="M 292 140 C 292 125, 282 115, 267 115 C 252 115, 242 125, 242 140 C 242 160, 267 175, 292 195 C 317 175, 342 160, 342 140 C 342 125, 332 115, 317 115 C 302 115, 292 125, 292 140 Z" fill="#B24C60" opacity="0.4"/>
+  
+  <!-- V e Y centralizados -->
+  <text x="256" y="300" font-family="Georgia, serif" font-size="200" font-weight="bold" fill="url(#text-gradient)" text-anchor="middle" dominant-baseline="middle">VY</text>
+  
+  <!-- Coração no centro inferior -->
+  <path d="M 256 400 C 256 400, 230 375, 220 360 C 210 345, 205 330, 205 320 C 205 305, 215 295, 230 295 C 240 295, 248 300, 256 310 C 264 300, 272 295, 282 295 C 297 295, 307 305, 307 320 C 307 330, 302 345, 292 360 C 282 375, 256 400, 256 400 Z" fill="#B24C60" opacity="0.6"/>
+</svg>

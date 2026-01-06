@@ -9,8 +9,7 @@ import {
   getDoc,
   type DocumentData,
 } from "firebase/firestore";
-import { auth, db } from "../../firebase";
-import { useAuthState } from "react-firebase-hooks/auth";
+import { db } from "../../firebase";
 import Button from "../components/Button/Button";
 
 function GiftCheckout() {
@@ -24,8 +23,6 @@ function GiftCheckout() {
   const [loading, setLoading] = useState(false);
   const [gift, setGift] = useState<Gift | null>(null);
   const [quantity, setQuantity] = useState(1);
-  const [nameError, setNameError] = useState("");
-  const [user] = useAuthState(auth);
 
   let docRef: DocumentReference<DocumentData>;
 
