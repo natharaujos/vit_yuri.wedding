@@ -120,6 +120,14 @@ function AllContributions() {
   const handleDelete = async () => {
     if (!selectedPaymentId) return;
 
+    const payment = payments.find((p) => p.id === selectedPaymentId);
+    if (payment?.status === "approved") {
+      console.warn("Não é possível excluir pagamentos aprovados");
+      setConfirmOpen(false);
+      setSelectedPaymentId(null);
+      return;
+    }
+
     try {
       await deleteDoc(doc(db, "payments", selectedPaymentId));
       setPayments((prev) => prev.filter((p) => p.id !== selectedPaymentId));
@@ -205,11 +213,22 @@ function AllContributions() {
                 </span>
                 <button
                   onClick={() => {
-                    setSelectedPaymentId(payment.id || "");
-                    setConfirmOpen(true);
+                    if (payment.status !== "approved") {
+                      setSelectedPaymentId(payment.id || "");
+                      setConfirmOpen(true);
+                    }
                   }}
-                  className="p-2 text-red-500 hover:text-red-700 hover:bg-red-50 rounded-md transition-colors duration-200 cursor-pointer"
-                  title="Remover contribuição"
+                  disabled={payment.status === "approved"}
+                  className={`p-2 rounded-md transition-colors duration-200 ${
+                    payment.status === "approved"
+                      ? "text-gray-300 cursor-not-allowed"
+                      : "text-red-500 hover:text-red-700 hover:bg-red-50 cursor-pointer"
+                  }`}
+                  title={
+                    payment.status === "approved"
+                      ? "Não é possível remover contribuições aprovadas"
+                      : "Remover contribuição"
+                  }
                 >
                   <Trash2 size={20} />
                 </button>
