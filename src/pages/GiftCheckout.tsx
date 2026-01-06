@@ -9,7 +9,8 @@ import {
   getDoc,
   type DocumentData,
 } from "firebase/firestore";
-import { db } from "../../firebase";
+import { auth, db } from "../../firebase";
+import { useAuthState } from "react-firebase-hooks/auth";
 import Button from "../components/Button/Button";
 
 function GiftCheckout() {
@@ -17,12 +18,11 @@ function GiftCheckout() {
   const navigate = useNavigate();
 
   const [buyerName, setBuyerName] = useState("");
-  const [buyerEmail, setBuyerEmail] = useState("");
   const [nameError, setNameError] = useState("");
-  const [emailError, setEmailError] = useState("");
   const [loading, setLoading] = useState(false);
   const [gift, setGift] = useState<Gift | null>(null);
   const [quantity, setQuantity] = useState(1);
+  const [user] = useAuthState(auth);
 
   let docRef: DocumentReference<DocumentData>;
 
@@ -46,16 +46,7 @@ function GiftCheckout() {
     }
     
     setNameError("");
-    setEmailError("");
     setLoading(true);
-    
-    // Validar email
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!buyerEmail || !emailRegex.test(buyerEmail)) {
-      setEmailError("Por favor, insira um email válido");
-      setLoading(false);
-      return;
-    }
     
     try {
       const totalAmount = (gift?.price || 0) * quantity;
@@ -63,7 +54,7 @@ function GiftCheckout() {
         giftId: id,
         giftTitle: gift?.title,
         buyerName,
-        buyerEmail: buyerEmail,
+        buyerEmail: user?.email,
         amount: totalAmount,
         quantity,
         mpPaymentId: "",
@@ -80,7 +71,6 @@ function GiftCheckout() {
             giftTitle: gift.title,
             giftPrice: totalAmount,
             buyerName,
-            buyerEmail,
             quantity,
           },
         });
@@ -164,31 +154,6 @@ function GiftCheckout() {
               <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
             </svg>
             {nameError}
-          </p>
-        )}
-      </div>
-
-      <div className="mb-4">
-        <input
-          type="email"
-          placeholder="Seu email"
-          value={buyerEmail}
-          onChange={(e) => {
-            setBuyerEmail(e.target.value);
-            if (emailError) setEmailError("");
-          }}
-          className={`border-2 px-4 py-2 w-full rounded-lg transition-all ${
-            emailError 
-              ? "border-red-500 focus:ring-2 focus:ring-red-500 focus:border-red-500" 
-              : "border-gray-300 focus:ring-2 focus:ring-[#B24C60] focus:border-[#B24C60]"
-          }`}
-        />
-        {emailError && (
-          <p className="text-red-500 text-sm mt-2 text-left flex items-center gap-1">
-            <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-              <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
-            </svg>
-            {emailError}
           </p>
         )}
       </div>
