@@ -136,7 +136,11 @@ function PaymentSuccess() {
         {validStatuses.includes(status as ValidStatus) && (
           <Link
             to="/"
-            className="mt-8 inline-block px-6 py-3 bg-wedding-500 text-white rounded-md hover:bg-wedding-600 transition"
+            style={{
+              backgroundColor: '#B24C60',
+              color: '#FFFFFF',
+            }}
+            className="mt-8 inline-block px-6 py-3 rounded-md hover:opacity-90 transition font-semibold"
           >
             Voltar para a página inicial
           </Link>
@@ -144,7 +148,11 @@ function PaymentSuccess() {
 
         <Link
           to="/my-contributions"
-          className="mt-8 inline-block px-6 py-3 bg-wedding-500 text-white rounded-md hover:bg-wedding-600 transition"
+          style={{
+            backgroundColor: '#B24C60',
+            color: '#FFFFFF',
+          }}
+          className="mt-8 inline-block px-6 py-3 rounded-md hover:opacity-90 transition font-semibold"
         >
           Ir para Minhas Contribuições
         </Link>
