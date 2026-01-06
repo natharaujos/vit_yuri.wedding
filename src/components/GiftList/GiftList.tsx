@@ -55,29 +55,38 @@ export default function GiftList() {
   const totalPages = Math.ceil(gifts.length / itemsPerPage);
 
   return (
-    <section id="presentes" className="max-w-7xl mx-auto px-4 py-16">
-      <h2 className="text-4xl font-bold text-[#3A3A3A] mb-8 text-center">
-        Lista de Presentes
-      </h2>
+    <section id="presentes" className="max-w-7xl mx-auto px-4 py-16 bg-gradient-to-b from-white to-wedding-50">
+      <div className="text-center mb-12">
+        <h2 className="text-5xl font-bold text-wedding-600 mb-4">
+          Lista de Presentes
+        </h2>
+        <p className="text-gray-600 text-lg">
+          Escolha um presente especial para celebrar nosso amor
+        </p>
+      </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
         {currentGifts.map(({ id, title, price, image }) => (
           <div
             key={id}
-            className="bg-white rounded-lg shadow-md p-4 flex flex-col justify-between items-center h-full"
+            className="bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 p-6 flex flex-col justify-between items-center border border-wedding-100 hover:border-wedding-300 transform hover:-translate-y-2"
           >
-            <div className="flex flex-col items-center">
-              <img
-                src={image}
-                alt={title}
-                className="w-32 h-32 object-contain mb-4"
-              />
-              <h3 className="text-lg font-semibold text-gray-800 mb-2 text-center">
+            <div className="flex flex-col items-center flex-1">
+              <div className="w-full h-48 flex items-center justify-center mb-4 bg-gradient-to-br from-wedding-50 to-white rounded-xl p-4">
+                <img
+                  src={image}
+                  alt={title}
+                  className="w-full h-full object-contain"
+                />
+              </div>
+              <h3 className="text-lg font-bold text-gray-800 mb-3 text-center line-clamp-2 min-h-[3.5rem]">
                 {title}
               </h3>
-              <p className="text-wedding-500 font-bold mb-4">
-                R$ {price.toFixed(2)}
-              </p>
+              <div className="bg-gradient-to-r from-wedding-100 to-wedding-200 px-4 py-2 rounded-full mb-4">
+                <p className="text-wedding-700 font-bold text-xl">
+                  R$ {price.toFixed(2)}
+                </p>
+              </div>
             </div>
 
             <Button
@@ -92,75 +101,130 @@ export default function GiftList() {
         ))}
       </div>
 
-      {/* Paginação */}
-      <div className="flex justify-center mt-10 space-x-2 sm:space-x-3 flex-wrap sm:flex-nowrap">
-        <button
-          onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-          disabled={currentPage === 1}
-          className={`px-3 py-1 sm:px-4 sm:py-2 rounded-md text-sm sm:text-base ${
-            currentPage === 1
-              ? "bg-gray-300 cursor-not-allowed"
-              : "bg-[#B24C60] text-white hover:bg-[#CE6375] cursor-pointer"
-          }`}
-        >
-          Prev
-        </button>
+      {/* Paginação Melhorada */}
+      {totalPages > 1 && (
+        <>
+          {/* Versão Mobile - Simplificada */}
+          <div className="flex md:hidden justify-center items-center mt-12 gap-3">
+            <button
+              onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+              disabled={currentPage === 1}
+              style={{
+                backgroundColor: currentPage === 1 ? '#E5E7EB' : '#B24C60',
+                color: currentPage === 1 ? '#9CA3AF' : '#FFFFFF',
+                cursor: currentPage === 1 ? 'not-allowed' : 'pointer',
+              }}
+              className="px-4 py-2 rounded-lg font-semibold text-sm shadow-md"
+            >
+              ←
+            </button>
 
-        <div className="flex overflow-x-auto max-w-[80vw] sm:max-w-none space-x-2 sm:space-x-3 scrollbar-hide">
-          {[...Array(totalPages)].map((_, i) => {
-            const pageNum = i + 1;
+            <div className="flex flex-col items-center px-4">
+              <span className="text-sm font-bold text-wedding-600">
+                Página {currentPage} de {totalPages}
+              </span>
+              <div className="flex gap-1.5 mt-2">
+                {[...Array(totalPages)].map((_, i) => (
+                  <div
+                    key={i}
+                    style={{
+                      backgroundColor: currentPage === i + 1 ? '#B24C60' : '#E8A5AC',
+                      width: currentPage === i + 1 ? '24px' : '8px',
+                    }}
+                    className="h-2 rounded-full transition-all duration-300"
+                  />
+                ))}
+              </div>
+            </div>
 
-            // Show first, last, current, and neighbors
-            if (
-              pageNum === 1 ||
-              pageNum === totalPages ||
-              (pageNum >= currentPage - 1 && pageNum <= currentPage + 1)
-            ) {
-              return (
-                <button
-                  key={pageNum}
-                  onClick={() => setCurrentPage(pageNum)}
-                  className={`px-3 py-1 sm:px-4 sm:py-2 rounded-md text-sm sm:text-base cursor-pointer ${
-                    currentPage === pageNum
-                      ? "bg-[#AF5C78] text-white"
-                      : "bg-[#B24C60] text-white hover:bg-[#CE6375]"
-                  }`}
-                >
-                  {pageNum}
-                </button>
-              );
-            }
+            <button
+              onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
+              disabled={currentPage === totalPages}
+              style={{
+                backgroundColor: currentPage === totalPages ? '#E5E7EB' : '#B24C60',
+                color: currentPage === totalPages ? '#9CA3AF' : '#FFFFFF',
+                cursor: currentPage === totalPages ? 'not-allowed' : 'pointer',
+              }}
+              className="px-4 py-2 rounded-lg font-semibold text-sm shadow-md"
+            >
+              →
+            </button>
+          </div>
 
-            // Show ellipsis if gap
-            if (
-              (pageNum === currentPage - 2 && pageNum > 1) ||
-              (pageNum === currentPage + 2 && pageNum < totalPages)
-            ) {
-              return (
-                <span key={pageNum} className="px-2 text-gray-500">
-                  ...
-                </span>
-              );
-            }
+          {/* Versão Desktop - Completa */}
+          <div className="hidden md:flex justify-center items-center mt-12 gap-2">
+            <button
+              onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+              disabled={currentPage === 1}
+              style={{
+                backgroundColor: currentPage === 1 ? '#E5E7EB' : '#B24C60',
+                color: currentPage === 1 ? '#6B7280' : '#FFFFFF',
+                cursor: currentPage === 1 ? 'not-allowed' : 'pointer',
+              }}
+              className="px-5 py-2.5 rounded-xl font-semibold text-sm transition-all duration-200 shadow-md hover:shadow-lg"
+            >
+              Anterior
+            </button>
 
-            return null;
-          })}
-        </div>
+            <div className="flex gap-2 items-center">
+              {[...Array(totalPages)].map((_, i) => {
+                const pageNum = i + 1;
 
-        <button
-          onClick={() =>
-            setCurrentPage((prev) => Math.min(prev + 1, totalPages))
-          }
-          disabled={currentPage === totalPages}
-          className={`px-3 py-1 sm:px-4 sm:py-2 rounded-md text-sm sm:text-base ${
-            currentPage === totalPages
-              ? "bg-gray-300 cursor-not-allowed"
-              : "bg-[#B24C60] text-white hover:bg-[#CE6375] cursor-pointer"
-          }`}
-        >
-          Next
-        </button>
-      </div>
+                // Show first, last, current, and neighbors
+                if (
+                  pageNum === 1 ||
+                  pageNum === totalPages ||
+                  (pageNum >= currentPage - 1 && pageNum <= currentPage + 1)
+                ) {
+                  return (
+                    <button
+                      key={pageNum}
+                      onClick={() => setCurrentPage(pageNum)}
+                      style={{
+                        backgroundColor: currentPage === pageNum ? '#B24C60' : '#FFFFFF',
+                        color: currentPage === pageNum ? '#FFFFFF' : '#B24C60',
+                        borderColor: currentPage === pageNum ? '#AF5C78' : '#E8A5AC',
+                      }}
+                      className="min-w-[44px] h-11 rounded-xl font-bold text-sm transition-all duration-200 cursor-pointer border-2 shadow-md hover:shadow-lg"
+                    >
+                      {pageNum}
+                    </button>
+                  );
+                }
+
+                // Show ellipsis if gap
+                if (
+                  (pageNum === currentPage - 2 && pageNum > 1) ||
+                  (pageNum === currentPage + 2 && pageNum < totalPages)
+                ) {
+                  return (
+                    <span key={pageNum} className="px-2 text-gray-400 font-bold">
+                      •••
+                    </span>
+                  );
+                }
+
+                return null;
+              })}
+            </div>
+
+            <button
+              onClick={() =>
+                setCurrentPage((prev) => Math.min(prev + 1, totalPages))
+              }
+              disabled={currentPage === totalPages}
+              style={{
+                backgroundColor: currentPage === totalPages ? '#E5E7EB' : '#B24C60',
+                color: currentPage === totalPages ? '#6B7280' : '#FFFFFF',
+                cursor: currentPage === totalPages ? 'not-allowed' : 'pointer',
+              }}
+              className="px-5 py-2.5 rounded-xl font-semibold text-sm transition-all duration-200 shadow-md hover:shadow-lg"
+            >
+              Próxima
+            </button>
+          </div>
+        </>
+      )}
     </section>
   );
 }
