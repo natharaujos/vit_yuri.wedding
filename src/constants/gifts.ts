@@ -112,9 +112,6 @@ export const giftData: Gift[] = [
     image: "https://m.media-amazon.com/images/I/815mquPeGvL._AC_SL1500_.jpg",
     price: new Price(78.9).getSummary(),
   },
-];
-
-export const giftData2: Gift[] = [
   {
     id: 2001,
     title: "Jogo de Panelas Tramontina Antiaderente Paris 5 Peças",
@@ -235,68 +232,64 @@ export const giftData2: Gift[] = [
     image: "https://m.media-amazon.com/images/I/61al-EnGpAL._AC_SL1000_.jpg",
     price: new Price(249.9).getSummary(),
   },
-];
-
-
-export const honeyMoonGifts = [
-  // {
-  //   id: 1,
-  //   title: "Operação Lua de Mel - Café da Manhã Romântico",
-  //   price: new Price(45.9).getSummary(),
-  //   image: "https://i.postimg.cc/zGrx3pJJ/operacao-lua-mel.jpg",
-  // },
-  // {
-  //   id: 2,
-  //   title: "Operação Lua de Mel - Jantar à Luz de Velas",
-  //   price: new Price(129.9).getSummary(),
-  //   image: "https://i.postimg.cc/zGrx3pJJ/operacao-lua-mel.jpg",
-  // },
-  // {
-  //   id: 3,
-  //   title: "Operação Lua de Mel - Passeio Romântico",
-  //   price: new Price(89.9).getSummary(),
-  //   image: "https://i.postimg.cc/zGrx3pJJ/operacao-lua-mel.jpg",
-  // },
-  // {
-  //   id: 4,
-  //   title: "Operação Lua de Mel - Dia de Spa",
-  //   price: new Price(149.9).getSummary(),
-  //   image: "https://i.postimg.cc/zGrx3pJJ/operacao-lua-mel.jpg",
-  // },
-  // {
-  //   id: 5,
-  //   title: "Operação Lua de Mel - Momento Surpresa",
-  //   price: new Price(69.9).getSummary(),
-  //   image: "https://i.postimg.cc/zGrx3pJJ/operacao-lua-mel.jpg",
-  // },
-  {
-    id: 99,
-    title: "Operação Lua de Mel - Piquenique ao Ar Livre",
-    price: new Price(59.9).getSummary(),
-    image: "https://i.postimg.cc/zGrx3pJJ/operacao-lua-mel.jpg",
-  },
-  {
-    id: 234,
-    title: "Operação Lua de Mel - Cinema Privativo",
-    price: new Price(99.5).getSummary(),
-    image: "https://i.postimg.cc/zGrx3pJJ/operacao-lua-mel.jpg",
-  },
-  {
-    id: 484,
-    title: "Operação Lua de Mel - Aula de Dança a Dois",
-    price: new Price(74.3).getSummary(),
-    image: "https://i.postimg.cc/zGrx3pJJ/operacao-lua-mel.jpg",
-  },
-  {
-    id: 342,
-    title: "Operação Lua de Mel - Sessão de Massagem Relaxante",
-    price: new Price(139.0).getSummary(),
-    image: "https://i.postimg.cc/zGrx3pJJ/operacao-lua-mel.jpg",
-  },
-  {
-    id: 423,
-    title: "Operação Lua de Mel - Noite de Jogos e Diversão",
-    price: new Price(49.7).getSummary(),
-    image: "https://i.postimg.cc/zGrx3pJJ/operacao-lua-mel.jpg",
-  },
+   {
+     id: 1,
+     title: "Operação Lua de Mel - Café da Manhã Romântico",
+     price: new Price(45.9).getSummary(),
+     image: "https://i.postimg.cc/zGrx3pJJ/operacao-lua-mel.jpg",
+   },
+   {
+     id: 2,
+     title: "Operação Lua de Mel - Jantar à Luz de Velas",
+     price: new Price(129.9).getSummary(),
+     image: "https://i.postimg.cc/zGrx3pJJ/operacao-lua-mel.jpg",
+   },
+   {
+     id: 3,
+     title: "Operação Lua de Mel - Passeio Romântico",
+     price: new Price(89.9).getSummary(),
+     image: "https://i.postimg.cc/zGrx3pJJ/operacao-lua-mel.jpg",
+   },
+   {
+     id: 4,
+     title: "Operação Lua de Mel - Dia de Spa",
+     price: new Price(149.9).getSummary(),
+     image: "https://i.postimg.cc/zGrx3pJJ/operacao-lua-mel.jpg",
+   },
+   {
+     id: 5,
+     title: "Operação Lua de Mel - Momento Surpresa",
+     price: new Price(69.9).getSummary(),
+     image: "https://i.postimg.cc/zGrx3pJJ/operacao-lua-mel.jpg",
+   },
+   {
+     id: 99,
+     title: "Operação Lua de Mel - Piquenique ao Ar Livre",
+     price: new Price(59.9).getSummary(),
+     image: "https://i.postimg.cc/zGrx3pJJ/operacao-lua-mel.jpg",
+   },
+   {
+     id: 234,
+     title: "Operação Lua de Mel - Cinema Privativo",
+     price: new Price(99.5).getSummary(),
+     image: "https://i.postimg.cc/zGrx3pJJ/operacao-lua-mel.jpg",
+   },
+   {
+     id: 484,
+     title: "Operação Lua de Mel - Aula de Dança a Dois",
+     price: new Price(74.3).getSummary(),
+     image: "https://i.postimg.cc/zGrx3pJJ/operacao-lua-mel.jpg",
+   },
+   {
+     id: 342,
+     title: "Operação Lua de Mel - Sessão de Massagem Relaxante",
+     price: new Price(139.0).getSummary(),
+     image: "https://i.postimg.cc/zGrx3pJJ/operacao-lua-mel.jpg",
+   },
+   {
+     id: 423,
+     title: "Operação Lua de Mel - Noite de Jogos e Diversão",
+     price: new Price(49.7).getSummary(),
+     image: "https://i.postimg.cc/zGrx3pJJ/operacao-lua-mel.jpg",
+   },
 ];
