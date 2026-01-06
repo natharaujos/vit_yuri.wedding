@@ -1,3 +1,6 @@
+import churchImage from '../../assets/nsradeoliveira_catedral.jpg';
+import Button from '../Button/Button';
+
 export function CeremonyDetails() {
   return (
     <div className="mt-16 w-full max-w-5xl">
@@ -19,15 +22,12 @@ export function CeremonyDetails() {
         <div className="flex justify-center">
           <div className="relative group">
             <div className="absolute -inset-2 bg-gradient-to-br from-wedding-200 to-wedding-300 rounded-3xl opacity-20 group-hover:opacity-30 blur-xl transition-opacity"></div>
-            <div className="relative rounded-3xl w-72 h-72 md:w-80 md:h-80 bg-gradient-to-br from-wedding-100 via-wedding-100 to-wedding-200 shadow-2xl flex items-center justify-center p-8 border-4 border-white">
-              <div className="text-center">
-                <svg className="w-20 h-20 mx-auto mb-4 text-[#A03D52]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
-                </svg>
-                <h3 className="text-[#A03D52] text-xl md:text-2xl font-serif font-semibold text-center leading-tight">
-                  Matriz N. S. de Oliveira
-                </h3>
-              </div>
+            <div className="relative rounded-3xl w-72 h-72 md:w-80 md:h-80 overflow-hidden shadow-2xl border-4 border-white">
+              <img 
+                src={churchImage} 
+                alt="Matriz Nossa Senhora de Oliveira" 
+                className="w-full h-full object-cover"
+              />
             </div>
           </div>
         </div>
@@ -76,6 +76,36 @@ export function CeremonyDetails() {
               </div>
             </div>
           </div>
+        </div>
+      </div>
+
+      {/* Mapa e Como Chegar */}
+      <div className="mt-12 w-full max-w-4xl mx-auto">
+        <div className="text-center mb-6">
+          <Button
+            link="https://maps.google.com/maps?q=Matriz+Nossa+Senhora+de+Oliveira+oliveira+mg+centro"
+            text="Como chegar"
+          />
+        </div>
+
+        <div className="w-full h-[400px] rounded-2xl overflow-hidden shadow-xl border-4 border-white">
+          <iframe
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3732.4!2d-44.827!3d-20.697!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMjDCsDQxJzQ5LjIiUyA0NMKwNDknMzcuMiJX!5e0!3m2!1spt-BR!2sbr!4v1234567890!5m2!1spt-BR!2sbr"
+            width="100%"
+            height="100%"
+            style={{ border: 0 }}
+            allowFullScreen
+            loading="lazy"
+            referrerPolicy="no-referrer-when-downgrade"
+            title="Localização da Igreja"
+            aria-label="Mapa mostrando a localização da Igreja"
+          ></iframe>
+        </div>
+
+        <div className="mt-6 text-center">
+          <p className="text-sm text-gray-500 italic">
+            💡 Dica: Recomendamos chegar com 15 minutos de antecedência
+          </p>
         </div>
       </div>
     </div>

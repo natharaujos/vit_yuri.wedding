@@ -12,6 +12,7 @@ import { db } from "../../../firebase";
 import { checkPaymentStatus } from "../../services/checkPaymentStatus";
 import { Dialog } from "@mui/material";
 import Button from "../Button/Button";
+import { Trash2 } from "lucide-react";
 
 interface Payment {
   id?: string;
@@ -94,14 +95,14 @@ function AllContributions() {
   const getStatusColor = (status: Payment["status"]) => {
     switch (status) {
       case "approved":
-        return "bg-green-100 text-green-700";
+        return "bg-green-100 text-green-800 border border-green-200";
       case "pending":
-        return "bg-wedding-100 text-wedding-700";
+        return "bg-yellow-100 text-yellow-800 border border-yellow-200";
       case "rejected":
       case "cancelled":
-        return "bg-red-100 text-red-700";
+        return "bg-red-100 text-red-800 border border-red-200";
       default:
-        return "bg-gray-100 text-gray-700";
+        return "bg-gray-100 text-gray-800 border border-gray-200";
     }
   };
 
@@ -144,24 +145,24 @@ function AllContributions() {
         Todos os Presentes
       </h2>
 
-      <div className="bg-white rounded-lg shadow p-4 mb-8">
-        <h3 className="text-lg font-semibold text-gray-700 mb-2">Resumo</h3>
+      <div className="bg-gradient-to-r from-white to-wedding-50 rounded-xl shadow-lg p-6 mb-8 border border-wedding-200">
+        <h3 className="text-xl font-bold text-wedding-600 mb-4">Resumo</h3>
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-          <div className="bg-wedding-50 p-4 rounded-lg">
-            <p className="text-sm text-gray-600">Total de Presentes</p>
-            <p className="text-2xl font-bold text-wedding-500">
+          <div className="bg-gradient-to-br from-wedding-50 to-wedding-100 p-4 rounded-lg shadow-sm border border-wedding-200">
+            <p className="text-sm font-medium text-gray-600">Total de Presentes</p>
+            <p className="text-3xl font-bold text-wedding-600 mt-1">
               {payments.length}
             </p>
           </div>
-          <div className="bg-green-50 p-4 rounded-lg">
-            <p className="text-sm text-gray-600">Presentes Aprovados</p>
-            <p className="text-2xl font-bold text-green-700">
+          <div className="bg-gradient-to-br from-green-50 to-green-100 p-4 rounded-lg shadow-sm border border-green-200">
+            <p className="text-sm font-medium text-gray-600">Presentes Aprovados</p>
+            <p className="text-3xl font-bold text-green-700 mt-1">
               {payments.filter((p) => p.status === "approved").length}
             </p>
           </div>
-          <div className="bg-blue-50 p-4 rounded-lg">
-            <p className="text-sm text-gray-600">Valor Total Aprovado</p>
-            <p className="text-2xl font-bold text-blue-700">
+          <div className="bg-gradient-to-br from-blue-50 to-blue-100 p-4 rounded-lg shadow-sm border border-blue-200">
+            <p className="text-sm font-medium text-gray-600">Valor Total Aprovado</p>
+            <p className="text-3xl font-bold text-blue-700 mt-1">
               R$ {totalAmount.toFixed(2)}
             </p>
           </div>
@@ -172,43 +173,47 @@ function AllContributions() {
         {payments.map((payment) => (
           <div
             key={payment.id}
-            className="bg-white rounded-lg shadow p-4 flex flex-col sm:flex-row justify-between gap-4 relative"
+            className="bg-gradient-to-r from-white to-wedding-50/30 rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300 p-5 relative pb-16 sm:pb-4 border border-wedding-100"
           >
-            <div className="flex-1">
-              <p className="font-medium text-gray-700">{payment.giftTitle}</p>
-              <p className="text-sm text-gray-500">
-                Comprador: {payment.buyerName} ({payment.buyerEmail})
-              </p>
-              <p className="text-sm text-gray-500 mt-1">
-                Data:{" "}
-                {payment.createdAt.toDate().toLocaleDateString("pt-BR", {
-                  day: "2-digit",
-                  month: "2-digit",
-                  year: "numeric",
-                  hour: "2-digit",
-                  minute: "2-digit",
-                })}
-              </p>
-              <p className="text-sm text-gray-500">
-                Valor: R$ {payment.amount.toFixed(2)}
-              </p>
-            </div>
-            <div
-              className={`${getStatusColor(
-                payment.status
-              )} px-3 py-1 rounded-full font-medium self-start sm:self-center`}
-            >
-              {getStatusText(payment.status)}
-            </div>
-            <div className="absolute bottom-2 right-5">
-              <Button
-                text="Remover"
-                onClick={() => {
-                  setSelectedPaymentId(payment.id || "");
-                  setConfirmOpen(true);
-                }}
-                variant="secondary"
-              />
+            <div className="flex flex-col sm:flex-row justify-between gap-4">
+              <div className="flex-1">
+                <p className="font-medium text-gray-700">{payment.giftTitle}</p>
+                <p className="text-sm text-gray-500">
+                  Comprador: {payment.buyerName} ({payment.buyerEmail})
+                </p>
+                <p className="text-sm text-gray-500 mt-1">
+                  Data:{" "}
+                  {payment.createdAt.toDate().toLocaleDateString("pt-BR", {
+                    day: "2-digit",
+                    month: "2-digit",
+                    year: "numeric",
+                    hour: "2-digit",
+                    minute: "2-digit",
+                  })}
+                </p>
+                <p className="text-sm text-gray-500">
+                  Valor: R$ {payment.amount.toFixed(2)}
+                </p>
+              </div>
+              <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
+                <span
+                  className={`${getStatusColor(
+                    payment.status
+                  )} px-4 py-2 rounded-full text-sm font-semibold whitespace-nowrap`}
+                >
+                  {getStatusText(payment.status)}
+                </span>
+                <button
+                  onClick={() => {
+                    setSelectedPaymentId(payment.id || "");
+                    setConfirmOpen(true);
+                  }}
+                  className="p-2 text-red-500 hover:text-red-700 hover:bg-red-50 rounded-md transition-colors duration-200 cursor-pointer"
+                  title="Remover contribuição"
+                >
+                  <Trash2 size={20} />
+                </button>
+              </div>
             </div>
           </div>
         ))}

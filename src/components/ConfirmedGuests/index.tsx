@@ -11,8 +11,8 @@ import { onAuthStateChanged } from "firebase/auth";
 import { db, auth } from "../../../firebase"; // certifique-se de exportar auth no seu firebase.ts
 import { Dialog } from "@mui/material";
 import admins from "../../constants/admins";
-import RemoveButton from "../RemoveButton";
 import Button from "../Button/Button";
+import { Trash2 } from "lucide-react";
 
 interface ConfirmedGuest {
   id: string;
@@ -103,10 +103,10 @@ export function ConfirmedGuests() {
         Presenças Confirmadas
       </h2>
 
-      <div className="bg-white rounded-lg shadow-lg p-6 mb-8">
+      <div className="bg-gradient-to-r from-white to-wedding-50 rounded-xl shadow-lg p-6 mb-8 border border-wedding-200">
         <p className="text-center text-lg font-medium text-gray-700">
           Total de Convidados Confirmados:
-          <span className="text-wedding-500 ml-2">{totalGuests}</span>
+          <span className="text-3xl font-bold text-wedding-600 ml-3 block mt-2">{totalGuests}</span>
         </p>
       </div>
 
@@ -114,43 +114,57 @@ export function ConfirmedGuests() {
         {guests.map((guest) => (
           <div
             key={guest.id}
-            className="bg-white rounded-lg shadow p-4 relative"
+            className="bg-gradient-to-r from-white to-wedding-50/30 rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300 p-5 relative border border-wedding-100"
           >
-            <p className="font-medium text-gray-700">
-              Confirmação feita por {guest.userName} - {guest.userEmail}
-            </p>
-            <p className="text-sm text-gray-500 mb-2">
-              Em:{" "}
-              {guest.confirmedAt.toDate().toLocaleDateString("pt-BR", {
-                day: "2-digit",
-                month: "2-digit",
-                year: "numeric",
-                hour: "2-digit",
-                minute: "2-digit",
-              })}
-            </p>
+            <div className="flex justify-between items-start">
+              <div className="flex-1">
+                <p className="font-semibold text-gray-800 mb-1">
+                  {guest.userName}
+                </p>
+                <p className="text-sm text-gray-600 mb-2">
+                  {guest.userEmail}
+                </p>
+                <p className="text-xs text-gray-500 mb-3">
+                  Confirmado em:{" "}
+                  {guest.confirmedAt.toDate().toLocaleDateString("pt-BR", {
+                    day: "2-digit",
+                    month: "2-digit",
+                    year: "numeric",
+                    hour: "2-digit",
+                    minute: "2-digit",
+                  })}
+                </p>
 
-            {guest.otherGuests && guest.otherGuests.length > 0 && (
-              <ul className="list-disc list-inside text-gray-600 mb-2">
-                {guest.otherGuests.map((name, idx) => (
-                  <li key={idx}>{name}</li>
-                ))}
-              </ul>
-            )}
+                {guest.otherGuests && guest.otherGuests.length > 0 && (
+                  <div className="mb-3">
+                    <p className="text-sm font-medium text-gray-700 mb-1">Acompanhantes:</p>
+                    <ul className="list-disc list-inside text-sm text-gray-600">
+                      {guest.otherGuests.map((name, idx) => (
+                        <li key={idx}>{name}</li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
 
-            <div className="bg-wedding-100 text-wedding-600 inline-block px-3 py-1 rounded-full font-medium">
-              {guest.guestsCount}{" "}
-              {guest.guestsCount === 1 ? "pessoa" : "pessoas"}
+                <div className="bg-gradient-to-r from-wedding-100 to-wedding-200 text-wedding-700 inline-block px-4 py-1.5 rounded-full font-semibold text-sm shadow-sm">
+                  {guest.guestsCount}{" "}
+                  {guest.guestsCount === 1 ? "pessoa" : "pessoas"}
+                </div>
+              </div>
+
+              {isAdmin && (
+                <button
+                  onClick={() => {
+                    setSelectedGuestId(guest.id);
+                    setConfirmOpen(true);
+                  }}
+                  className="p-2 text-red-500 hover:text-red-700 hover:bg-red-50 rounded-md transition-colors duration-200 cursor-pointer"
+                  title="Remover confirmação"
+                >
+                  <Trash2 size={20} />
+                </button>
+              )}
             </div>
-
-            {isAdmin && (
-              <RemoveButton
-                onClick={() => {
-                  setSelectedGuestId(guest.id);
-                  setConfirmOpen(true);
-                }}
-              />
-            )}
           </div>
         ))}
 
