@@ -1,11 +1,11 @@
-import { MT_API } from "../constants/urls";
+import { VY_API } from "../constants/urls";
 
 export async function checkPaymentStatus(
   paymentId: string
 ): Promise<"approved" | "rejected" | "cancelled" | "pending" | "error"> {
   try {
     const res = await fetch(
-      `${MT_API}/api/payments/checkStatus?paymentId=${paymentId}`,
+      `${VY_API}/api/payments/checkStatus?paymentId=${paymentId}`,
       {
         method: "GET",
         headers: { "Content-Type": "application/json" },

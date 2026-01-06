@@ -1,6 +1,6 @@
 import { useLocation } from "react-router-dom";
 import { useState } from "react";
-import { MT_API } from "../constants/urls";
+import { VY_API } from "../constants/urls";
 
 export type LocationState = {
   docRefId: string;
@@ -18,7 +18,7 @@ export default function PaymentOptions() {
   const handlePix = async () => {
     setLoading(true);
     try {
-      const res = await fetch(`${MT_API}/api/payments/create`, {
+      const res = await fetch(`${VY_API}/api/payments/create`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

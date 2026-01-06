@@ -44,7 +44,7 @@ export function CeremonyDetails() {
                 </div>
                 <div>
                   <p className="text-sm text-gray-500 font-medium uppercase tracking-wider">Data</p>
-                  <p className="text-lg text-gray-800 font-semibold mt-1">A definir</p>
+                  <p className="text-lg text-gray-800 font-semibold mt-1">30/05/2026</p>
                 </div>
               </div>
 
