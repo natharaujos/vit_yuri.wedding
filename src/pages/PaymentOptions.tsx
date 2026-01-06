@@ -9,11 +9,12 @@ export type LocationState = {
   giftTitle: string;
   giftPrice: number;
   buyerName: string;
+  buyerEmail: string;
 };
 
 export default function PaymentOptions() {
   const { state } = useLocation();
-  const { docRefId, giftTitle, giftPrice, buyerName } = state as LocationState;
+  const { docRefId, giftTitle, giftPrice, buyerName, buyerEmail } = state as LocationState;
 
   const [loading, setLoading] = useState(false);
 
@@ -33,7 +34,10 @@ export default function PaymentOptions() {
               unit_price: giftPrice,
             },
           ],
-          payer: { name: buyerName },
+          payer: { 
+            name: buyerName,
+            email: buyerEmail 
+          },
           payment_method_id: "pix",
         }),
       });
