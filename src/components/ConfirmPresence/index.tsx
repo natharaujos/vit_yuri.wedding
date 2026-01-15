@@ -33,7 +33,8 @@ export function ConfirmPresenceModal({
       try {
         const q = query(
           collection(db, "presenceConfirmations"),
-          where("userEmail", "==", userEmail)
+          where("userEmail", "==", userEmail),
+          where("addedByAdmin", "==", false)
         );
 
         const querySnapshot = await getDocs(q);
@@ -73,7 +74,7 @@ export function ConfirmPresenceModal({
 
   const handleConfirm = () => {
     if (alreadyConfirmed) return;
-    onConfirm(guestsCount + 1, [user?.displayName || "", ...guestNames]);
+    onConfirm(guestsCount + 1, guestNames);
     onClose();
   };
 

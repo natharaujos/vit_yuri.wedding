@@ -12,7 +12,9 @@ import { db, auth } from "../../../firebase"; // certifique-se de exportar auth 
 import { Dialog } from "@mui/material";
 import admins from "../../constants/admins";
 import Button from "../Button/Button";
-import { Trash2 } from "lucide-react";
+import { Trash2, UserPlus } from "lucide-react";
+import { AddManualGuestModal } from "../AddManualGuest";
+import { saveManualPresenceConfirmation } from "../../services/saveManualPresenceConfirmation";
 
 interface ConfirmedGuest {
   id: string;
@@ -22,6 +24,8 @@ interface ConfirmedGuest {
   confirmedAt: Timestamp;
   status: "confirmed" | "canceled";
   otherGuests?: string[];
+  addedByAdmin?: boolean;
+  adminEmail?: string;
 }
 
 export function ConfirmedGuests() {
@@ -33,6 +37,9 @@ export function ConfirmedGuests() {
   // controle do modal de confirmação
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [selectedGuestId, setSelectedGuestId] = useState<string | null>(null);
+
+  // controle do modal de adicionar convidado manual
+  const [addManualGuestOpen, setAddManualGuestOpen] = useState(false);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -72,18 +79,61 @@ export function ConfirmedGuests() {
     if (!selectedGuestId) return;
 
     try {
+      const guestToDelete = guests.find((g) => g.id === selectedGuestId);
       await deleteDoc(doc(db, "presenceConfirmations", selectedGuestId));
       setGuests((prev) => prev.filter((g) => g.id !== selectedGuestId));
-      setTotalGuests(
-        (prev) =>
-          prev -
-          (guests.find((g) => g.id === selectedGuestId)?.guestsCount || 0)
-      );
+      
+      if (guestToDelete) {
+        setTotalGuests(
+          (prev) => prev - (guestToDelete.guestsCount || 0)
+        );
+      }
     } catch (error) {
       console.error("Erro ao excluir confirmação:", error);
     } finally {
       setConfirmOpen(false);
       setSelectedGuestId(null);
+    }
+  };
+
+  const handleAddManualGuest = async (
+    adminEmail: string,
+    guestName: string,
+    guestsCount: number,
+    guestNames: string[]
+  ) => {
+    try {
+      // Gera um email único para o convidado manual baseado no nome e timestamp
+      const uniqueEmail = `manual_${guestName.toLowerCase().replace(/\s+/g, '_')}_${Date.now()}@manual.guest`;
+      
+      await saveManualPresenceConfirmation({
+        userName: guestName,
+        userEmail: uniqueEmail,
+        adminEmail: adminEmail,
+        guestsCount: guestsCount,
+        confirmedAt: new Date(),
+        otherGuests: guestNames.slice(1), // Remove o primeiro nome que é o próprio convidado
+        status: "confirmed",
+        addedByAdmin: true,
+      });
+
+      // Recarregar a lista de convidados
+      const q = query(collection(db, "presenceConfirmations"));
+      const querySnapshot = await getDocs(q);
+
+      const confirmedGuests: ConfirmedGuest[] = [];
+      let total = 0;
+
+      querySnapshot.forEach((d) => {
+        const data = d.data() as Omit<ConfirmedGuest, "id">;
+        confirmedGuests.push({ id: d.id, ...data });
+        total += data.guestsCount;
+      });
+
+      setGuests(confirmedGuests);
+      setTotalGuests(total);
+    } catch (error) {
+      console.error("Erro ao adicionar convidado manual:", error);
     }
   };
 
@@ -104,10 +154,20 @@ export function ConfirmedGuests() {
       </h2>
 
       <div className="bg-gradient-to-r from-white to-wedding-50 rounded-xl shadow-lg p-6 mb-8 border border-wedding-200">
-        <p className="text-center text-lg font-medium text-gray-700">
-          Total de Convidados Confirmados:
-          <span className="text-3xl font-bold text-wedding-600 ml-3 block mt-2">{totalGuests}</span>
-        </p>
+        <div className="flex items-center justify-between">
+          <p className="text-center text-lg font-medium text-gray-700 flex-1">
+            Total de Convidados Confirmados:
+            <span className="text-3xl font-bold text-wedding-600 ml-3 block mt-2">{totalGuests}</span>
+          </p>
+          
+          {isAdmin && (
+            <Button
+              text="Adicionar Convidado"
+              onClick={() => setAddManualGuestOpen(true)}
+              variant="primary"
+            />
+          )}
+        </div>
       </div>
 
       <div className="grid gap-4">
@@ -121,9 +181,11 @@ export function ConfirmedGuests() {
                 <p className="font-semibold text-gray-800 mb-1">
                   {guest.userName}
                 </p>
-                <p className="text-sm text-gray-600 mb-2">
-                  {guest.userEmail}
-                </p>
+                {!guest.addedByAdmin && (
+                  <p className="text-sm text-gray-600 mb-2">
+                    {guest.userEmail}
+                  </p>
+                )}
                 <p className="text-xs text-gray-500 mb-3">
                   Confirmado em:{" "}
                   {guest.confirmedAt.toDate().toLocaleDateString("pt-BR", {
@@ -165,6 +227,17 @@ export function ConfirmedGuests() {
                 </button>
               )}
             </div>
+            
+            {guest.addedByAdmin && guest.adminEmail && (
+              <div className="absolute bottom-3 right-3 text-right">
+                <p className="text-xs font-medium text-wedding-600 mb-0.5">
+                  ✨ Adicionado por Administrador
+                </p>
+                <p className="text-xs text-wedding-500">
+                  {guest.adminEmail}
+                </p>
+              </div>
+            )}
           </div>
         ))}
 
@@ -205,6 +278,13 @@ export function ConfirmedGuests() {
           />
         </div>
       </Dialog>
+
+      {/* Modal de adicionar convidado manual */}
+      <AddManualGuestModal
+        isOpen={addManualGuestOpen}
+        onClose={() => setAddManualGuestOpen(false)}
+        onConfirm={handleAddManualGuest}
+      />
     </section>
   );
 }
