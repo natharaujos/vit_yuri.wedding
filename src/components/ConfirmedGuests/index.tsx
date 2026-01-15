@@ -161,11 +161,13 @@ export function ConfirmedGuests() {
           </p>
           
           {isAdmin && (
-            <Button
-              text="Adicionar Convidado"
+            <button
               onClick={() => setAddManualGuestOpen(true)}
-              variant="primary"
-            />
+              className="inline-flex items-center gap-2 px-6 py-3 bg-[#B24C60] text-white font-semibold rounded-2xl shadow-md border border-[#B24C60] hover:bg-[#CE6375] transition duration-300 ease-in-out cursor-pointer"
+            >
+              <UserPlus size={20} />
+              Adicionar Convidado
+            </button>
           )}
         </div>
       </div>
