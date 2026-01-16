@@ -61,7 +61,7 @@ function Home() {
           <div className="mt-16 flex flex-col sm:flex-row gap-6 items-center justify-center">
             <Button text="Nossa História" link="#historia" />
             <Button text="Lista de Presentes" link="#presentes" />
-            <Button text="Confirme Presença" onClick={() => setIsModalOpen(true)} />
+            {/* <Button text="Confirme Presença" onClick={() => setIsModalOpen(true)} /> */}
           </div>
         </div>
       </div>
