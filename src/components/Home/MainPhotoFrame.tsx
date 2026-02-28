@@ -1,4 +1,4 @@
-import mainPicture from '../../assets/main_picture.jpg';
+import mainWedding from '../../assets/main_wedding.jpeg';
 
 export function MainPhotoFrame() {
   return (
@@ -13,7 +13,7 @@ export function MainPhotoFrame() {
           <div className="w-64 h-64 sm:w-80 sm:h-80 md:w-96 md:h-96 rounded-full overflow-hidden relative shadow-inner">
             {/* Imagem dos noivos */}
             <img 
-              src={mainPicture} 
+              src={mainWedding} 
               alt="Vitória e Yuri" 
               className="w-full h-full object-cover"
             />

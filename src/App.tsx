@@ -12,6 +12,9 @@ import { ConfirmedGuests } from "./components/ConfirmedGuests";
 import { MyContributions } from "./components/MyContributions";
 import AdminRoute from "./components/AdminRoute";
 import AllContributions from "./components/AllContributions";
+import photoSession from "./assets/photo_session.jpeg";
+import photoSession2 from "./assets/photo_session_2.jpeg";
+import photoSession3 from "./assets/photo_session_3.jpeg";
 
 function App() {
   return (
@@ -27,7 +30,7 @@ function App() {
                   <>
                     <Home />
                     {/* <Reception /> */}
-                    <OurHistory />
+                    <OurHistory images={[photoSession, photoSession2, photoSession3]} />
                     <GiftList />
                   </>
                 </ProtectedRoute>
