@@ -1,12 +1,22 @@
+
+import React, { useState } from "react";
+import PhotoCarouselModal from "./PhotoCarouselModal";
+
 interface OurHistoryProps {
   title?: string;
   story?: string;
   images?: string[];
 }
 
-function OurHistory({
-  images = [],
-}: OurHistoryProps) {
+function OurHistory({ images = [] }: OurHistoryProps) {
+  const [modalOpen, setModalOpen] = useState(false);
+  const [modalIndex, setModalIndex] = useState(0);
+
+  const openModal = (idx: number) => {
+    setModalIndex(idx);
+    setModalOpen(true);
+  };
+
   return (
     <section id="historia" className="max-w-6xl mx-auto px-4 py-16 sm:py-24">
       <div className="flex flex-col items-center gap-8">
@@ -29,7 +39,8 @@ function OurHistory({
                 key={idx}
                 src={src}
                 alt={`Nossa história imagem ${idx + 1}`}
-                className="rounded-lg object-cover w-full h-56 sm:h-64 md:h-72 shadow-lg"
+                className="rounded-lg object-cover w-full h-56 sm:h-64 md:h-72 shadow-lg cursor-pointer hover:scale-105 transition-transform"
+                onClick={() => openModal(idx)}
               />
             ))}
           </div>
@@ -38,6 +49,12 @@ function OurHistory({
             <p className="text-white text-xl text-center">Fotos em breve...</p>
           </div>
         )}
+        <PhotoCarouselModal
+          images={images}
+          isOpen={modalOpen}
+          initialIndex={modalIndex}
+          onClose={() => setModalOpen(false)}
+        />
       </div>
     </section>
   );
