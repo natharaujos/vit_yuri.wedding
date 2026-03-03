@@ -1,5 +1,4 @@
 import churchImage from '../../assets/nsradeoliveira_catedral.jpg';
-import Button from '../Button/Button';
 
 export function CeremonyDetails() {
   return (
@@ -78,35 +77,42 @@ export function CeremonyDetails() {
           </div>
         </div>
       </div>
+    </div>
+  );
+}
 
-      {/* Mapa e Como Chegar */}
-      <div className="mt-12 w-full max-w-4xl mx-auto">
-        <div className="text-center mb-6">
-          <Button
-            link="https://maps.google.com/maps?q=Matriz+Nossa+Senhora+de+Oliveira+oliveira+mg+centro"
-            text="Como chegar"
-          />
-        </div>
+export function CeremonyMap() {
+  return (
+    <div className="w-full max-w-4xl mx-auto">
+      <div className="text-center mb-6">
+        <a
+          href="https://maps.google.com/maps?q=Matriz+Nossa+Senhora+de+Oliveira+oliveira+mg+centro"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-block px-8 py-3 bg-[#B24C60] hover:bg-[#CE6375] text-white font-semibold rounded-2xl shadow-md transition duration-300 ease-in-out"
+        >
+          Como chegar
+        </a>
+      </div>
 
-        <div className="w-full h-[400px] rounded-2xl overflow-hidden shadow-xl border-4 border-white">
-          <iframe
-            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3732.4!2d-44.827!3d-20.697!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMjDCsDQxJzQ5LjIiUyA0NMKwNDknMzcuMiJX!5e0!3m2!1spt-BR!2sbr!4v1234567890!5m2!1spt-BR!2sbr"
-            width="100%"
-            height="100%"
-            style={{ border: 0 }}
-            allowFullScreen
-            loading="lazy"
-            referrerPolicy="no-referrer-when-downgrade"
-            title="Localização da Igreja"
-            aria-label="Mapa mostrando a localização da Igreja"
-          ></iframe>
-        </div>
+      <div className="w-full h-[400px] rounded-2xl overflow-hidden shadow-xl border-4 border-gray-200">
+        <iframe
+          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3732.4!2d-44.827!3d-20.697!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMjDCsDQxJzQ5LjIiUyA0NMKwNDknMzcuMiJX!5e0!3m2!1spt-BR!2sbr!4v1234567890!5m2!1spt-BR!2sbr"
+          width="100%"
+          height="100%"
+          style={{ border: 0 }}
+          allowFullScreen
+          loading="lazy"
+          referrerPolicy="no-referrer-when-downgrade"
+          title="Localização da Igreja"
+          aria-label="Mapa mostrando a localização da Igreja"
+        ></iframe>
+      </div>
 
-        <div className="mt-6 text-center">
-          <p className="text-sm text-gray-500 italic">
-            💡 Dica: Recomendamos chegar com 15 minutos de antecedência
-          </p>
-        </div>
+      <div className="mt-6 text-center">
+        <p className="text-sm text-gray-500 italic">
+          💡 Dica: Recomendamos chegar com 15 minutos de antecedência
+        </p>
       </div>
     </div>
   );
