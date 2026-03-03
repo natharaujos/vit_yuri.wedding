@@ -8,6 +8,7 @@ import PaymentSuccess from "./components/PaymentSuccess/PaymentSuccess";
 import ProtectedRoute from "./components/Auth/ProtectedRoute";
 import GoogleLogin from "./components/Auth/GoogleLogin";
 import PaymentOptions from "./pages/PaymentOptions";
+import GiftsCRUD from "./pages/GiftsCRUD";
 import { ConfirmedGuests } from "./components/ConfirmedGuests";
 import { MyContributions } from "./components/MyContributions";
 import AdminRoute from "./components/AdminRoute";
@@ -92,6 +93,26 @@ function App() {
                 <ProtectedRoute>
                   <AdminRoute>
                     <AllContributions />
+                  </AdminRoute>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin/gifts"
+              element={
+                <ProtectedRoute>
+                  <AdminRoute>
+                    <GiftsCRUD />
+                  </AdminRoute>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/gifts"
+              element={
+                <ProtectedRoute>
+                  <AdminRoute>
+                    <GiftsCRUD />
                   </AdminRoute>
                 </ProtectedRoute>
               }

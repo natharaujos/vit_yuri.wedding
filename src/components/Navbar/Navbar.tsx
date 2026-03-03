@@ -22,7 +22,7 @@ function Navbar() {
 
   const navLinks = [
     { label: "Início", onClick: () => navigate("/") },
-    { label: "Presentes", onClick: () => navigate("/") },
+    { label: "Presentes", onClick: () => navigate("/gifts") },
     {
       label: "Minhas Contribuições",
       onClick: () => navigate("/my-contributions"),
@@ -39,6 +39,11 @@ function Navbar() {
     onClick: () => navigate("/all-contributions"),
   };
 
+  const giftsAdmin = {
+    label: "Gerenciar Presentes",
+    onClick: () => navigate("/admin/gifts"),
+  };
+
   const logout = {
     label: "Sair",
     onClick: () => handleLogout(),
@@ -47,6 +52,7 @@ function Navbar() {
   if (user?.email && admins.includes(user?.email)) {
     navLinks.push(confirmedRoute);
     navLinks.push(allContributions);
+    navLinks.push(giftsAdmin);
   }
 
   if (user) {
