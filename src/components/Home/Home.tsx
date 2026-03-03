@@ -4,10 +4,9 @@ import { auth } from "../../../firebase";
 import { savePresenceConfirmation } from "../../services/savePresenceConfirmation";
 import Button from "../Button/Button";
 import { ConfirmPresenceModal } from "../ConfirmPresence";
-import { DecorativeOrnament } from "./DecorativeOrnament";
-import { MainPhotoFrame } from "./MainPhotoFrame";
 import { WelcomeMessage } from "./WelcomeMessage";
 import { CeremonyDetails } from "./CeremonyDetails";
+import mainPicBackground from "../../assets/main_pic_background.jpeg";
 
 function Home() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -27,27 +26,27 @@ function Home() {
   return (
     <section
       id="home"
-      className="relative min-h-screen pt-16 pb-12 px-4 sm:px-6 md:px-8 
-                 bg-gradient-to-b from-wedding-50/30 via-white to-wedding-50/30
-                 overflow-hidden"
+      className="relative pb-12 px-4 sm:px-6 md:px-8 overflow-hidden"
+      style={{
+        backgroundImage: `url(${mainPicBackground})`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundAttachment: 'fixed'
+      }}
     >
-      <DecorativeOrnament position="top" />
+      {/* Overlay escuro para melhor legibilidade do texto */}
+      <div className="absolute inset-0 bg-black/40"></div>
 
-      <div className="relative max-w-6xl mx-auto">
+      <div className="relative max-w-6xl mx-auto z-10 pt-32 pb-32">
         {/* Título principal no topo */}
-        <h1 className="text-4xl md:text-6xl font-bold text-[#3A3A3A] mb-16 tracking-tight text-center">
+        <h1 className="text-4xl md:text-6xl font-bold text-white mb-16 tracking-tight text-center drop-shadow-lg">
           Bem-vindos ao nosso
-          <span className="block text-[#B24C60] mt-2">Casamento</span>
+          <span className="block text-[#FFB3C1] mt-2 drop-shadow-lg">Casamento</span>
         </h1>
 
         {/* Container com foto à esquerda e mensagem à direita */}
         <div className="flex flex-col lg:flex-row items-center lg:items-start gap-8 lg:gap-12 mb-16">
-          {/* Foto principal à esquerda */}
-          <div className="flex-shrink-0">
-            <MainPhotoFrame />
-          </div>
-
-          {/* Mensagem de boas-vindas à direita */}
+          {/* Mensagem de boas-vindas */}
           <div className="flex-1 flex items-center">
             <WelcomeMessage />
           </div>
@@ -65,8 +64,6 @@ function Home() {
           </div>
         </div>
       </div>
-
-      <DecorativeOrnament position="bottom" />
 
       <ConfirmPresenceModal
         isOpen={isModalOpen}

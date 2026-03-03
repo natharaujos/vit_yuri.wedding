@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { User, Menu } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useAuthState } from "react-firebase-hooks/auth";
@@ -18,6 +18,7 @@ function Navbar() {
   const navigate = useNavigate();
   const [user] = useAuthState(auth);
   const [confirmOpen, setConfirmOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
 
   const navLinks = [
     { label: "Início", onClick: () => navigate("/") },
@@ -63,15 +64,29 @@ function Navbar() {
     }
   };
 
+  // Detectar scroll
+  const handleScroll = () => {
+    setIsScrolled(window.scrollY > 50);
+  };
+
+  useEffect(() => {
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
   return (
     <>
-      <nav className="fixed top-0 left-0 w-full bg-white/90 backdrop-blur-md shadow-lg z-50">
+      <nav className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 ${
+        isScrolled 
+          ? 'bg-white/90 backdrop-blur-md shadow-lg' 
+          : 'bg-transparent'
+      }`}>
         <div className="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
           <div className="flex items-center space-x-4">
             {/* Logo / Nome dos noivos */}
             <a
               href="#home"
-              className="text-2xl font-bold text-[#B24C60] cursor-pointer"
+              className="text-2xl font-bold text-[#B24C60] cursor-pointer drop-shadow-lg"
               onClick={() => navigate("/")}
             >
               Vitória & Yuri

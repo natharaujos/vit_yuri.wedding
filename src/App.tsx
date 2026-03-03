@@ -15,12 +15,14 @@ import AllContributions from "./components/AllContributions";
 import photoSession from "./assets/photo_session.jpeg";
 import photoSession2 from "./assets/photo_session_2.jpeg";
 import photoSession3 from "./assets/photo_session_3.jpeg";
+import photoSession4 from "./assets/photo_session_4.jpeg";
+import photoSession5 from "./assets/photo_session_5.jpeg";
 
 function App() {
   return (
     <BrowserRouter>
       <Navbar />
-      <div className="pt-20">
+      <div>
         <main>
           <Routes>
             <Route
@@ -30,7 +32,7 @@ function App() {
                   <>
                     <Home />
                     {/* <Reception /> */}
-                    <OurHistory images={[photoSession, photoSession2, photoSession3]} />
+                    <OurHistory images={[photoSession, photoSession2, photoSession3, photoSession4, photoSession5]} />
                     <GiftList />
                   </>
                 </ProtectedRoute>
