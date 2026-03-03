@@ -14,6 +14,7 @@ import {
   getDocs,
 } from "firebase/firestore";
 import StyledLoading from "../components/StyledLoading";
+import Pagination from "../components/Pagination";
 
 const ITEMS_PER_PAGE = 10;
 
@@ -25,7 +26,7 @@ const Toast = ({ message, type, show }: { message: string; type: 'success' | 'er
   const icon = type === 'success' ? '✓' : '✕';
 
   return (
-    <div className={`fixed top-4 right-4 ${bgColor} text-white px-6 py-3 rounded-lg shadow-lg flex items-center gap-2 animate-pulse z-40`}>
+    <div className={`fixed top-4 right-4 ${bgColor} text-white px-6 py-3 rounded-lg shadow-lg flex items-center gap-2 animate-pulse z-[9999]`}>
       <span className="text-xl font-bold">{icon}</span>
       <span>{message}</span>
     </div>
@@ -94,8 +95,8 @@ const GiftModal = ({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black/20 backdrop-blur-sm flex items-center justify-center z-50 p-4 overflow-y-auto">
-      <div className="bg-white rounded-lg shadow-2xl p-8 max-w-2xl w-full my-8">
+    <div className="fixed inset-0 bg-black/20 backdrop-blur-sm flex items-center justify-center z-50 p-0 md:p-4 overflow-y-auto">
+      <div className="bg-white md:rounded-lg shadow-2xl p-6 md:p-8 w-full md:max-w-2xl min-h-screen md:min-h-0 md:my-8">
         <h2 className="text-3xl font-bold text-wedding-600 mb-6">
           {isEditing ? "✏️ Editar Presente" : "🎁 Novo Presente"}
         </h2>
@@ -135,13 +136,23 @@ const GiftModal = ({
               Preço (R$) *
             </label>
             <input
-              type="number"
+              type="text"
               name="price"
-              value={formData.price || 0}
-              onChange={onInputChange}
+              value={formData.price ? `R$ ${Number(formData.price).toFixed(2).replace('.', ',')}` : "R$ 0,00"}
+              onChange={(e) => {
+                // Remove tudo que não for número
+                const numericValue = e.target.value.replace(/[^\d]/g, '');
+                // Converte centavos para reais (divide por 100)
+                const priceValue = numericValue ? Number(numericValue) / 100 : 0;
+                onInputChange({
+                  target: {
+                    name: 'price',
+                    value: priceValue.toString()
+                  }
+                } as any);
+              }}
               className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-wedding-600 transition-colors"
-              placeholder="100.00"
-              step="0.01"
+              placeholder="R$ 0,00"
             />
           </div>
         </div>
@@ -394,8 +405,8 @@ export default function GiftsCRUD() {
           giftTitle={giftToDelete?.title || ""}
         />
 
-        {/* Tabela de Presentes */}
-        <div className="bg-gray-50 rounded-lg shadow-lg overflow-hidden border-2 border-wedding-200">
+        {/* Tabela de Presentes - Desktop */}
+        <div className="hidden md:block bg-gray-50 rounded-lg shadow-lg overflow-hidden border-2 border-wedding-200">
           <div className="overflow-x-auto">
             <table className="w-full">
               <thead className="bg-white border-b-4 border-wedding-600">
@@ -463,40 +474,72 @@ export default function GiftsCRUD() {
           )}
         </div>
 
-        {/* Paginação */}
-        {totalPages > 1 && (
-          <div className="mt-8 flex justify-center items-center gap-4">
-            <button
-              onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
-              disabled={currentPage === 1}
-              className="px-4 py-2 bg-wedding-600 hover:bg-wedding-700 disabled:bg-gray-400 text-white rounded-lg transition-colors font-semibold"
-            >
-              ← Anterior
-            </button>
-            <div className="flex gap-2">
-              {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => (
-                <button
-                  key={page}
-                  onClick={() => setCurrentPage(page)}
-                  className={`w-10 h-10 rounded-lg font-semibold transition-colors ${
-                    currentPage === page
-                      ? 'bg-wedding-600 text-white'
-                      : 'bg-white border-2 border-wedding-300 text-wedding-600 hover:bg-wedding-50'
-                  }`}
-                >
-                  {page}
-                </button>
-              ))}
+        {/* Cards de Presentes - Mobile */}
+        <div className="md:hidden space-y-4">
+          {paginatedGifts.length === 0 ? (
+            <div className="text-center py-12 bg-white rounded-lg shadow-lg">
+              <p className="text-gray-500 text-lg mb-4">Nenhum presente cadastrado</p>
+              <button
+                onClick={handleAddNew}
+                className="flex items-center gap-2 bg-wedding-600 hover:bg-wedding-700 text-white px-6 py-3 rounded-lg transition-colors font-semibold mx-auto"
+              >
+                <Plus size={20} />
+                Criar Primeiro Presente
+              </button>
             </div>
-            <button
-              onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
-              disabled={currentPage === totalPages}
-              className="px-4 py-2 bg-wedding-600 hover:bg-wedding-700 disabled:bg-gray-400 text-white rounded-lg transition-colors font-semibold"
-            >
-              Próximo →
-            </button>
-          </div>
-        )}
+          ) : (
+            paginatedGifts.map((gift) => (
+              <div 
+                key={gift.firestoreId} 
+                className="bg-white rounded-lg shadow-md border-2 border-wedding-200 p-4"
+              >
+                <div className="flex gap-4 mb-4">
+                  <img
+                    src={gift.image}
+                    alt={gift.title}
+                    className="w-20 h-20 object-cover rounded-lg border-2 border-wedding-300"
+                    onError={(e) => {
+                      (e.target as HTMLImageElement).src = "https://via.placeholder.com/80";
+                    }}
+                  />
+                  <div className="flex-1">
+                    <div className="flex justify-between items-start mb-2">
+                      <span className="text-xs text-gray-500 font-bold">ID: {gift.id}</span>
+                    </div>
+                    <h3 className="font-bold text-gray-900 text-sm mb-2 line-clamp-2">{gift.title}</h3>
+                    <p className="text-wedding-600 font-bold text-lg">R$ {gift.price.toFixed(2)}</p>
+                  </div>
+                </div>
+                <div className="flex gap-2">
+                  <button
+                    onClick={() => handleEdit(gift)}
+                    disabled={isAddingNew || editingId !== null}
+                    className="flex-1 flex items-center justify-center gap-1 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 text-white px-4 py-3 rounded-lg transition-colors text-sm font-semibold shadow-md"
+                  >
+                    <Edit2 size={16} />
+                    Editar
+                  </button>
+                  <button
+                    onClick={() => handleDeleteClick(gift.firestoreId, gift.title)}
+                    disabled={isAddingNew || editingId !== null}
+                    className="flex-1 flex items-center justify-center gap-1 bg-red-600 hover:bg-red-700 disabled:bg-gray-400 text-white px-4 py-3 rounded-lg transition-colors text-sm font-semibold shadow-md"
+                  >
+                    <Trash2 size={16} />
+                    Deletar
+                  </button>
+                </div>
+              </div>
+            ))
+          )}
+        </div>
+
+        {/* Paginação */}
+        <Pagination 
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={setCurrentPage}
+        />
+
 
         <div className="mt-12 text-center">
           <Button text="Voltar para Home" link="/" />

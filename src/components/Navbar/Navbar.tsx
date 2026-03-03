@@ -22,7 +22,7 @@ function Navbar() {
 
   const navLinks = [
     { label: "Início", onClick: () => navigate("/") },
-    { label: "Presentes", onClick: () => navigate("/gifts") },
+    { label: "Presentes", onClick: () => navigate("/presentes") },
     {
       label: "Minhas Contribuições",
       onClick: () => navigate("/my-contributions"),

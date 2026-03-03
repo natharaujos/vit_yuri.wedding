@@ -98,7 +98,7 @@ function GiftCheckout() {
   const totalPrice = (gift.price * quantity).toFixed(2);
 
   return (
-    <div className="max-w-xl mx-auto px-4 py-12 text-center">
+    <div className="max-w-xl mx-auto px-4 py-12 pt-32 text-center">
       <img
         src={gift.image}
         alt={gift.title}

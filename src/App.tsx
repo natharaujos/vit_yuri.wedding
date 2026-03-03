@@ -9,6 +9,7 @@ import ProtectedRoute from "./components/Auth/ProtectedRoute";
 import GoogleLogin from "./components/Auth/GoogleLogin";
 import PaymentOptions from "./pages/PaymentOptions";
 import GiftsCRUD from "./pages/GiftsCRUD";
+import AllGifts from "./pages/AllGifts";
 import { ConfirmedGuests } from "./components/ConfirmedGuests";
 import { MyContributions } from "./components/MyContributions";
 import AdminRoute from "./components/AdminRoute";
@@ -114,6 +115,14 @@ function App() {
                   <AdminRoute>
                     <GiftsCRUD />
                   </AdminRoute>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/presentes"
+              element={
+                <ProtectedRoute>
+                  <AllGifts />
                 </ProtectedRoute>
               }
             />
