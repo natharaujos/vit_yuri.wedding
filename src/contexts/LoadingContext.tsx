@@ -1,5 +1,4 @@
 import { createContext, useContext, useState } from "react";
-import StyledLoading from "../components/StyledLoading";
 
 type LoadingContextType = {
   loading: boolean;
@@ -25,7 +24,6 @@ const LoadingProvider = ({ children }: { children: React.ReactNode }) => {
   return (
     <LoadingContext.Provider value={{ loading, setLoadingWithDelay }}>
       {children}
-      {loading && <StyledLoading />}
     </LoadingContext.Provider>
   );
 };
