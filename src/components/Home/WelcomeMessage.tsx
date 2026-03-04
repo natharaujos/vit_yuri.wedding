@@ -1,17 +1,6 @@
 export function WelcomeMessage() {
   return (
     <div className="w-full">
-      {/* Decoração superior */}
-      <div className="flex justify-start mb-6">
-        <div className="flex items-center gap-3">
-          <div className="h-px w-12 bg-gradient-to-r from-transparent to-white/50"></div>
-          <svg className="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
-            <path fillRule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clipRule="evenodd" />
-          </svg>
-          <div className="h-px w-12 bg-gradient-to-l from-transparent to-white/50"></div>
-        </div>
-      </div>
-
       {/* Card da mensagem */}
       <div className="relative">
         {/* Sombra suave atrás */}

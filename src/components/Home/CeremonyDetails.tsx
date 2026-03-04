@@ -6,13 +6,13 @@ export function CeremonyDetails() {
       {/* Título da seção com decoração */}
       <div className="text-center mb-10">
         <div className="flex items-center justify-center gap-4 mb-4">
-          <div className="h-px w-16 bg-gradient-to-r from-transparent to-white"></div>
-          <h2 className="text-3xl md:text-5xl font-bold text-white drop-shadow-lg">
+          <div className="h-px w-16 bg-gradient-to-r from-transparent to-wedding-500"></div>
+          <h2 className="text-3xl md:text-5xl font-bold text-gray-800">
             Cerimônia
           </h2>
-          <div className="h-px w-16 bg-gradient-to-l from-transparent to-white"></div>
+          <div className="h-px w-16 bg-gradient-to-l from-transparent to-wedding-500"></div>
         </div>
-        <p className="text-white/80 text-sm md:text-base drop-shadow-lg">Celebre conosco este momento especial</p>
+        <p className="text-gray-600 text-sm md:text-base">Celebre conosco este momento especial</p>
       </div>
 
       {/* Container principal */}
@@ -21,7 +21,7 @@ export function CeremonyDetails() {
         <div className="flex justify-center">
           <div className="relative group">
             <div className="absolute -inset-2 bg-gradient-to-br from-wedding-200 to-wedding-300 rounded-3xl opacity-20 group-hover:opacity-30 blur-xl transition-opacity"></div>
-            <div className="relative rounded-3xl w-72 h-72 md:w-80 md:h-80 overflow-hidden shadow-2xl border-4 border-white">
+            <div className="relative rounded-3xl w-72 h-72 md:w-80 md:h-80 overflow-hidden shadow-2xl border-4 border-wedding-200">
               <img 
                 src={churchImage} 
                 alt="Matriz Nossa Senhora de Oliveira" 
@@ -33,42 +33,42 @@ export function CeremonyDetails() {
 
         {/* Informações */}
         <div className="flex justify-center md:justify-start">
-          <div className="bg-white/10 backdrop-blur-lg shadow-xl px-8 py-10 rounded-3xl max-w-sm w-full border border-white/30">
+          <div className="bg-white shadow-xl px-8 py-10 rounded-3xl max-w-sm w-full border-2 border-wedding-200">
             <div className="space-y-6">
               <div className="flex items-start gap-4">
-                <div className="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center flex-shrink-0">
-                  <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div className="w-10 h-10 rounded-full bg-wedding-100 flex items-center justify-center flex-shrink-0">
+                  <svg className="w-5 h-5 text-wedding-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                   </svg>
                 </div>
                 <div>
-                  <p className="text-sm text-white/70 font-medium uppercase tracking-wider drop-shadow-lg">Data</p>
-                  <p className="text-lg text-white font-semibold mt-1 drop-shadow-lg">30/05/2026</p>
+                  <p className="text-sm text-gray-500 font-medium uppercase tracking-wider">Data</p>
+                  <p className="text-lg text-gray-800 font-semibold mt-1">30/05/2026</p>
                 </div>
               </div>
 
               <div className="flex items-start gap-4">
-                <div className="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center flex-shrink-0">
-                  <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div className="w-10 h-10 rounded-full bg-wedding-100 flex items-center justify-center flex-shrink-0">
+                  <svg className="w-5 h-5 text-wedding-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                   </svg>
                 </div>
                 <div>
-                  <p className="text-sm text-white/70 font-medium uppercase tracking-wider drop-shadow-lg">Horário</p>
-                  <p className="text-lg text-white font-semibold mt-1 drop-shadow-lg">10:00</p>
+                  <p className="text-sm text-gray-500 font-medium uppercase tracking-wider">Horário</p>
+                  <p className="text-lg text-gray-800 font-semibold mt-1">10:00</p>
                 </div>
               </div>
 
               <div className="flex items-start gap-4">
-                <div className="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center flex-shrink-0">
-                  <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div className="w-10 h-10 rounded-full bg-wedding-100 flex items-center justify-center flex-shrink-0">
+                  <svg className="w-5 h-5 text-wedding-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                   </svg>
                 </div>
                 <div>
-                  <p className="text-sm text-white/70 font-medium uppercase tracking-wider drop-shadow-lg">Local</p>
-                  <p className="text-lg text-white font-semibold mt-1 leading-snug drop-shadow-lg">
+                  <p className="text-sm text-gray-500 font-medium uppercase tracking-wider">Local</p>
+                  <p className="text-lg text-gray-800 font-semibold mt-1 leading-snug">
                     Matriz Nossa Senhora de Oliveira, Centro
                   </p>
                 </div>

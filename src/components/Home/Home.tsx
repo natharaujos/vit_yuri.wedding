@@ -29,12 +29,16 @@ function Home() {
       {/* Seção com imagem de fundo - Hero + Mensagem + Cerimônia */}
       <section
         id="home-hero"
-        className="relative px-4 sm:px-6 md:px-8"
+        className="relative px-4 sm:px-6 md:px-8 bg-white"
       >
         {/* Background para Mobile */}
         <div 
-          className="absolute inset-0 bg-cover bg-center bg-no-repeat md:hidden"
-          style={{ backgroundImage: `url(${photoSessionMobile})` }}
+          className="absolute inset-0 bg-no-repeat md:hidden"
+          style={{ 
+            backgroundImage: `url(${photoSessionMobile})`,
+            backgroundPosition: 'center top',
+            backgroundSize: '200% auto'
+          }}
         />
         
         {/* Background para Desktop */}
@@ -54,22 +58,24 @@ function Home() {
           </h1>
 
           {/* Mensagem de boas-vindas */}
-          <div className="flex flex-col lg:flex-row items-center lg:items-start gap-8 lg:gap-12 mb-16 pt-[40rem] md:pt-0">
+          <div className="flex flex-col lg:flex-row items-center lg:items-start gap-8 lg:gap-12 mb-16 pt-[20rem] md:pt-0">
             <div className="flex-1 flex items-center">
               <WelcomeMessage />
             </div>
           </div>
 
-          {/* Detalhes da cerimônia */}
-          <div className="flex flex-col items-center">
-            <CeremonyDetails />
-          </div>
+        
         </div>
       </section>
 
       {/* Seção com fundo branco - Mapa e Botões de ação */}
       <section id="home" className="bg-white py-12 px-4 sm:px-6 md:px-8">
         <div className="max-w-6xl mx-auto">
+            {/* Detalhes da cerimônia */}
+          <div className="flex flex-col items-center pb-16">
+            <CeremonyDetails />
+          </div>
+
           {/* Mapa da cerimônia */}
           <div className="mb-12">
             <CeremonyMap />
