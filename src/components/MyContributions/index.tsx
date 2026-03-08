@@ -8,10 +8,18 @@ import {
   doc,
   updateDoc,
 } from "firebase/firestore";
-import { db } from "../../../firebase";
+import {
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  updateProfile,
+  signOut,
+} from "firebase/auth";
+import { useAuthState } from "react-firebase-hooks/auth";
+import { db, auth } from "../../../firebase";
 import { checkPaymentStatus } from "../../services/checkPaymentStatus";
 import { Link } from "react-router-dom";
 import { Dialog } from "@mui/material";
+import admins from "../../constants/admins";
 
 interface Payment {
   id?: string; // Add id field for document reference
@@ -32,33 +40,31 @@ interface Payment {
 
 export function MyContributions() {
   const [payments, setPayments] = useState<Payment[]>([]);
-  const [loading, setLoading] = useState(false);
+  const [authLoading, setAuthLoading] = useState(false);
   const [selectedPayment, setSelectedPayment] = useState<Payment | null>(null);
   const [detailsOpen, setDetailsOpen] = useState(false);
+  const [mode, setMode] = useState<"login" | "signup">("login");
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
-  const [emailError, setEmailError] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [authError, setAuthError] = useState("");
   const [searched, setSearched] = useState(false);
+  const [user] = useAuthState(auth);
 
-  const handleSearch = async () => {
-    if (!email.trim()) {
-      setEmailError("Por favor, informe seu email.");
+  const isAdminUser = user?.email ? admins.includes(user.email) : false;
+
+  const fetchPaymentsByEmail = async (emailValue: string) => {
+    if (!emailValue.trim()) {
       return;
     }
 
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-      setEmailError("Por favor, informe um email válido.");
-      return;
-    }
-
-    setEmailError("");
-    setLoading(true);
     setSearched(true);
 
     try {
       const q = query(
         collection(db, "payments"),
-        where("buyerEmail", "==", email.toLowerCase().trim())
+        where("buyerEmail", "==", emailValue.toLowerCase().trim())
       );
       const querySnapshot = await getDocs(q);
 
@@ -100,18 +106,96 @@ export function MyContributions() {
       setPayments(myPayments);
     } catch (error) {
       console.error("Error fetching payments:", error);
-    } finally {
-      setLoading(false);
     }
   };
 
-  useEffect(() => {
-    // Try to load email from localStorage on mount
-    const savedEmail = localStorage.getItem("buyerEmail");
-    if (savedEmail) {
-      setEmail(savedEmail);
+  const handleGuestAuth = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setAuthError("");
+
+    const normalizedEmail = email.toLowerCase().trim();
+
+    if (!normalizedEmail || !password) {
+      setAuthError("Informe email e senha.");
+      return;
     }
-  }, []);
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(normalizedEmail)) {
+      setAuthError("Informe um email valido.");
+      return;
+    }
+
+    if (mode === "signup") {
+      if (!name.trim()) {
+        setAuthError("Informe seu nome para criar a conta.");
+        return;
+      }
+
+      if (password.length < 6) {
+        setAuthError("A senha precisa ter pelo menos 6 caracteres.");
+        return;
+      }
+
+      if (password !== confirmPassword) {
+        setAuthError("As senhas nao coincidem.");
+        return;
+      }
+
+      if (admins.includes(normalizedEmail)) {
+        setAuthError("Este email e administrativo. Use o Login Admin no menu.");
+        return;
+      }
+    }
+
+    setAuthLoading(true);
+    try {
+      if (mode === "signup") {
+        const credential = await createUserWithEmailAndPassword(
+          auth,
+          normalizedEmail,
+          password
+        );
+        await updateProfile(credential.user, { displayName: name.trim() });
+      } else {
+        await signInWithEmailAndPassword(auth, normalizedEmail, password);
+      }
+    } catch (error: unknown) {
+      const firebaseError = error as { code?: string };
+      switch (firebaseError.code) {
+        case "auth/email-already-in-use":
+          setAuthError("Este email ja possui conta. Faca login.");
+          break;
+        case "auth/invalid-credential":
+        case "auth/wrong-password":
+        case "auth/user-not-found":
+          setAuthError("Email ou senha invalidos.");
+          break;
+        case "auth/weak-password":
+          setAuthError("Senha fraca. Use ao menos 6 caracteres.");
+          break;
+        default:
+          setAuthError("Nao foi possivel autenticar agora. Tente novamente.");
+      }
+    } finally {
+      setAuthLoading(false);
+    }
+  };
+
+  const handleLogout = async () => {
+    await signOut(auth);
+    setPayments([]);
+    setSearched(false);
+  };
+
+  useEffect(() => {
+    if (user?.email) {
+      void fetchPaymentsByEmail(user.email);
+    } else {
+      setPayments([]);
+      setSearched(false);
+    }
+  }, [user?.email]);
 
   const getStatusColor = (status: Payment["status"]) => {
     switch (status) {
@@ -167,55 +251,132 @@ export function MyContributions() {
     setDetailsOpen(true);
   };
 
+  if (!user) {
+    return (
+      <section className="max-w-lg mx-auto px-4 py-12 pt-32">
+        <h2 className="text-2xl font-bold text-wedding-500 text-center mb-3">
+          Minhas Contribuicoes
+        </h2>
+        <p className="text-gray-600 text-center mb-8">
+          Crie uma conta de convidado para acessar suas contribuicoes.
+        </p>
+
+        <div className="bg-white rounded-xl shadow-md border border-wedding-100 p-6">
+          <div className="flex rounded-lg bg-wedding-50 p-1 mb-5">
+            <button
+              type="button"
+              onClick={() => {
+                setMode("login");
+                setAuthError("");
+              }}
+              className={`flex-1 py-2 rounded-md font-semibold transition ${
+                mode === "login"
+                  ? "bg-[#B24C60] text-white"
+                  : "text-[#B24C60] hover:bg-wedding-100"
+              }`}
+            >
+              Entrar
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                setMode("signup");
+                setAuthError("");
+              }}
+              className={`flex-1 py-2 rounded-md font-semibold transition ${
+                mode === "signup"
+                  ? "bg-[#B24C60] text-white"
+                  : "text-[#B24C60] hover:bg-wedding-100"
+              }`}
+            >
+              Criar Conta
+            </button>
+          </div>
+
+          <form onSubmit={handleGuestAuth} className="space-y-4">
+            {mode === "signup" && (
+              <input
+                type="text"
+                placeholder="Seu nome"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                className="w-full border-2 border-gray-300 px-4 py-2 rounded-lg focus:ring-2 focus:ring-[#B24C60] focus:border-[#B24C60]"
+              />
+            )}
+
+            <input
+              type="email"
+              placeholder="Seu email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="w-full border-2 border-gray-300 px-4 py-2 rounded-lg focus:ring-2 focus:ring-[#B24C60] focus:border-[#B24C60]"
+            />
+
+            <input
+              type="password"
+              placeholder="Senha"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="w-full border-2 border-gray-300 px-4 py-2 rounded-lg focus:ring-2 focus:ring-[#B24C60] focus:border-[#B24C60]"
+            />
+
+            {mode === "signup" && (
+              <input
+                type="password"
+                placeholder="Confirmar senha"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                className="w-full border-2 border-gray-300 px-4 py-2 rounded-lg focus:ring-2 focus:ring-[#B24C60] focus:border-[#B24C60]"
+              />
+            )}
+
+            {authError && (
+              <p className="text-sm text-red-600 bg-red-50 border border-red-200 rounded-lg px-3 py-2">
+                {authError}
+              </p>
+            )}
+
+            <button
+              type="submit"
+              disabled={authLoading}
+              className="w-full py-3 rounded-lg font-semibold text-white bg-[#B24C60] hover:bg-[#CE6375] transition disabled:opacity-60 disabled:cursor-not-allowed"
+            >
+              {authLoading
+                ? "Aguarde..."
+                : mode === "signup"
+                  ? "Criar conta guest"
+                  : "Entrar"}
+            </button>
+          </form>
+        </div>
+      </section>
+    );
+  }
+
   return (
     <section className="max-w-4xl mx-auto px-4 py-12 pt-32">
       <h2 className="text-2xl font-bold text-wedding-500 text-center mb-8">
-        Minhas Contribuições
+        Minhas Contribuicoes
       </h2>
 
-      {/* Email input form */}
-      <div className="bg-white rounded-lg shadow-md p-6 mb-8">
-        <p className="text-gray-700 mb-4">
-          Digite seu email para consultar suas contribuições:
-        </p>
-        <div className="flex flex-col sm:flex-row gap-3">
-          <input
-            type="email"
-            placeholder="Seu email"
-            value={email}
-            onChange={(e) => {
-              setEmail(e.target.value);
-              if (emailError) {
-                setEmailError("");
-              }
-            }}
-            onKeyPress={(e) => {
-              if (e.key === "Enter") {
-                handleSearch();
-              }
-            }}
-            className={`flex-1 border-2 px-4 py-2 rounded-lg transition-all ${
-              emailError
-                ? "border-red-500 focus:ring-2 focus:ring-red-500 focus:border-red-500"
-                : "border-gray-300 focus:ring-2 focus:ring-[#B24C60] focus:border-[#B24C60]"
-            }`}
-          />
-          <button
-            onClick={handleSearch}
-            disabled={loading}
-            className={`px-6 py-2 rounded-lg font-semibold text-white transition ${
-              loading
-                ? "bg-gray-400 cursor-not-allowed"
-                : "bg-wedding-500 hover:bg-wedding-600"
-            }`}
-          >
-            {loading ? "Buscando..." : "Buscar"}
-          </button>
+      <div className="bg-white rounded-lg shadow-md border border-wedding-100 p-5 mb-8 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <div>
+          <p className="text-gray-700 font-semibold">Conta: {user.email}</p>
+          <p className="text-sm text-gray-500">
+            {isAdminUser
+              ? "Conta administrativa"
+              : "Conta guest (sem acesso ao painel admin)"}
+          </p>
         </div>
-        {emailError && <p className="text-red-500 text-sm mt-2">{emailError}</p>}
+        <button
+          type="button"
+          onClick={() => void handleLogout()}
+          className="px-5 py-2 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-100 transition"
+        >
+          Sair da conta
+        </button>
       </div>
 
-      {/* Results section - only show after search */}
       {searched && (
         <div className="grid gap-4">
         {payments.map((payment, index) => (
@@ -259,7 +420,7 @@ export function MyContributions() {
 
         {payments.length === 0 && (
           <p className="text-center text-gray-500">
-            Nenhuma contribuição encontrada para este email.
+            Nenhuma contribuicao encontrada para este email.
           </p>
         )}
         </div>

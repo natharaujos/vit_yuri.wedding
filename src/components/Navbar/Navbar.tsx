@@ -59,6 +59,8 @@ function Navbar() {
     navLinks.push(allContributions);
     navLinks.push(giftsAdmin);
     navLinks.push(logout);
+  } else if (user) {
+    navLinks.push(logout);
   } else if (!user) {
     navLinks.push(loginAdmin);
   }
@@ -103,22 +105,14 @@ function Navbar() {
             </a>
           </div>
 
-          {/* Menu dropdown com foto do usuário */}
+          {/* Menu dropdown */}
           <DropdownMenu modal={false}>
             <DropdownMenuTrigger asChild>
               <button className="flex items-center gap-2 focus:outline-none hover:opacity-80 transition-opacity cursor-pointer bg-[#F9E8EB] hover:bg-[#F3D1D6] px-3 py-2 rounded-full">
                 <Menu size={20} className="text-[#B24C60]" />
-                {user?.photoURL ? (
-                  <img
-                    src={user.photoURL}
-                    alt="Perfil"
-                    className="w-12 h-12 rounded-full border-2 border-[#B24C60] object-cover"
-                  />
-                ) : (
-                  <div className="w-12 h-12 rounded-full bg-[#B24C60] flex items-center justify-center text-white">
-                    <User size={28} />
-                  </div>
-                )}
+                <div className="w-12 h-12 rounded-full bg-[#B24C60] flex items-center justify-center text-white">
+                  <User size={28} />
+                </div>
               </button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-56 mt-2">
