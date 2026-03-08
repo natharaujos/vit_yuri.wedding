@@ -1,137 +1,237 @@
 import { useNavigate, useParams } from "react-router-dom";
-import { useEffect, useState } from "react";
-import type { Gift } from "../store/giftSlice";
+import { useEffect, useMemo, useState } from "react";
 import {
   addDoc,
   collection,
   doc,
-  DocumentReference,
   getDoc,
-  type DocumentData,
 } from "firebase/firestore";
 import { auth, db } from "../../firebase";
 import { useAuthState } from "react-firebase-hooks/auth";
 import Button from "../components/Button/Button";
+import { useDispatch, useSelector } from "react-redux";
+import type { RootState } from "../store";
+import {
+  addToCart,
+  removeFromCart,
+  updateQuantity,
+} from "../store/cartSlice";
+
+type GiftFromDb = {
+  title: string;
+  image: string;
+  price: number;
+};
 
 function GiftCheckout() {
   const { id } = useParams();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const [buyerName, setBuyerName] = useState("");
   const [nameError, setNameError] = useState("");
   const [loading, setLoading] = useState(false);
-  const [gift, setGift] = useState<Gift | null>(null);
-  const [quantity, setQuantity] = useState(1);
+  const [loadingGift, setLoadingGift] = useState(false);
   const [user] = useAuthState(auth);
 
-  let docRef: DocumentReference<DocumentData>;
+  const cartItems = useSelector((state: RootState) => state.cart.items);
 
   useEffect(() => {
-    const getGiftDetails = async () => {
-      if (id) {
+    const addGiftFromRouteToCart = async () => {
+      if (!id) {
+        return;
+      }
+
+      const alreadyInCart = cartItems.some((item) => item.giftId === id);
+      if (alreadyInCart) {
+        return;
+      }
+
+      setLoadingGift(true);
+      try {
         const giftDoc = await getDoc(doc(db, "gifts", id));
-        const giftData = giftDoc.data();
-        setGift(giftData as Gift);
+        if (!giftDoc.exists()) {
+          return;
+        }
+
+        const giftData = giftDoc.data() as GiftFromDb;
+        dispatch(
+          addToCart({
+            giftId: id,
+            title: giftData.title,
+            image: giftData.image,
+            price: giftData.price,
+          })
+        );
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setLoadingGift(false);
       }
     };
 
-    getGiftDetails();
-  }, [id]);
+    addGiftFromRouteToCart();
+  }, [id, cartItems, dispatch]);
+
+  const totalAmount = useMemo(
+    () => cartItems.reduce((acc, item) => acc + item.price * item.quantity, 0),
+    [cartItems]
+  );
 
   const handlePayment = async () => {
-    // Validar nome
     if (!buyerName.trim()) {
       setNameError("Por favor, informe seu nome para continuar.");
       return;
     }
-    
+
+    if (cartItems.length === 0) {
+      alert("Seu carrinho está vazio.");
+      return;
+    }
+
     setNameError("");
     setLoading(true);
-    
+
     try {
-      const totalAmount = (gift?.price || 0) * quantity;
+      const paymentItems = cartItems.map((item) => ({
+        giftId: item.giftId,
+        title: item.title,
+        quantity: item.quantity,
+        unitPrice: item.price,
+        totalPrice: item.price * item.quantity,
+      }));
+
       const paymentRecord = {
-        giftId: id,
-        giftTitle: gift?.title,
+        giftId: cartItems[0]?.giftId || "",
+        giftTitle:
+          cartItems.length === 1
+            ? cartItems[0].title
+            : `${cartItems.length} presentes`,
+        giftIds: cartItems.map((item) => item.giftId),
         buyerName,
-        buyerEmail: user?.email,
+        buyerEmail: user?.email || "",
         amount: totalAmount,
-        quantity,
+        quantity: cartItems.reduce((acc, item) => acc + item.quantity, 0),
+        items: paymentItems,
         mpPaymentId: "",
         status: "pending",
         createdAt: new Date(),
       };
-      const response = await addDoc(collection(db, "payments"), paymentRecord);
-      docRef = response;
 
-      if (gift) {
-        navigate(`/gift/${id}/options`, {
-          state: {
-            docRefId: docRef.id,
-            giftTitle: gift.title,
-            giftPrice: totalAmount,
-            buyerName,
-            quantity,
-          },
-        });
-      }
+      const response = await addDoc(collection(db, "payments"), paymentRecord);
+
+      navigate(`/checkout/options`, {
+        state: {
+          docRefId: response.id,
+          items: paymentItems,
+          giftPrice: totalAmount,
+          buyerName,
+          buyerEmail: user?.email || "",
+        },
+      });
     } catch (error) {
       console.error(error);
-      alert(
-        `Erro ao iniciar sessão de pagamento. Entre em contato com os noivos.`
-      );
+      alert("Erro ao iniciar sessao de pagamento. Entre em contato com os noivos.");
     } finally {
       setLoading(false);
     }
   };
 
-  if (!gift) {
+  if (loadingGift) {
     return (
       <div className="flex items-center justify-center h-screen">
-        <p className="text-lg text-gray-700 font-medium">
-          Presente não encontrado.
-        </p>
+        <p className="text-lg text-gray-700 font-medium">Carregando presente...</p>
       </div>
     );
   }
 
-  const totalPrice = (gift.price * quantity).toFixed(2);
-
-  return (
-    <div className="max-w-xl mx-auto px-4 py-12 pt-32 text-center">
-      <img
-        src={gift.image}
-        alt={gift.title}
-        className="w-50 rounded-md mb-6 mx-auto"
-      />
-      <h2 className="text-2xl font-bold">{gift.title}</h2>
-      <p className="text-lg text-gray-600 mb-2">
-        R$ {gift.price.toFixed(2)} cada
-      </p>
-
-      {/* Quantidade com botões + - */}
-      <div className="flex items-center justify-center gap-3 mb-4">
+  if (cartItems.length === 0) {
+    return (
+      <div className="flex flex-col items-center justify-center h-screen gap-4 px-4 text-center">
+        <p className="text-lg text-gray-700 font-medium">Seu carrinho esta vazio.</p>
         <button
-          onClick={() => setQuantity((q) => Math.max(1, q - 1))}
-          className="px-3 py-1 bg-gray-200 rounded-md hover:bg-gray-300 transition"
+          onClick={() => navigate("/presentes")}
+          className="inline-block px-6 py-3 font-semibold rounded-2xl shadow-md border transition duration-300 ease-in-out text-center cursor-pointer bg-[#B24C60] text-white hover:bg-[#CE6375] border-[#B24C60]"
         >
-          -
-        </button>
-        <span className="text-lg font-semibold w-8 text-center">
-          {quantity}
-        </span>
-        <button
-          onClick={() => setQuantity((q) => q + 1)}
-          className="px-3 py-1 bg-gray-200 rounded-md hover:bg-gray-300 transition"
-        >
-          +
+          Ver lista de presentes
         </button>
       </div>
+    );
+  }
 
-      {/* Total */}
-      <p className="text-lg font-semibold text-gray-800 mb-6">
-        Total: R$ {totalPrice}
-      </p>
+  return (
+    <div className="max-w-3xl mx-auto px-4 py-12 pt-32">
+      <h2 className="text-3xl font-bold text-center mb-6">Seu carrinho</h2>
+
+      <div className="space-y-4 mb-8">
+        {cartItems.map((item) => (
+          <div
+            key={item.giftId}
+            className="bg-white rounded-xl shadow-md border border-wedding-100 p-4 flex flex-col sm:flex-row gap-4 items-center"
+          >
+            <img
+              src={item.image}
+              alt={item.title}
+              className="w-24 h-24 object-contain rounded-md"
+            />
+
+            <div className="flex-1 w-full">
+              <p className="font-bold text-gray-800">{item.title}</p>
+              <p className="text-sm text-gray-500">R$ {item.price.toFixed(2)} cada</p>
+              <p className="text-sm font-semibold text-gray-700 mt-1">
+                Subtotal: R$ {(item.price * item.quantity).toFixed(2)}
+              </p>
+            </div>
+
+            <div className="flex items-center gap-2">
+              <button
+                onClick={() =>
+                  dispatch(
+                    updateQuantity({
+                      giftId: item.giftId,
+                      quantity: Math.max(1, item.quantity - 1),
+                    })
+                  )
+                }
+                className="px-3 py-1 bg-gray-200 rounded-md hover:bg-gray-300 transition"
+              >
+                -
+              </button>
+              <span className="text-lg font-semibold w-8 text-center">{item.quantity}</span>
+              <button
+                onClick={() =>
+                  dispatch(
+                    updateQuantity({ giftId: item.giftId, quantity: item.quantity + 1 })
+                  )
+                }
+                className="px-3 py-1 bg-gray-200 rounded-md hover:bg-gray-300 transition"
+              >
+                +
+              </button>
+            </div>
+
+            <button
+              onClick={() => dispatch(removeFromCart(item.giftId))}
+              className="px-4 py-2 text-red-600 border border-red-300 rounded-lg hover:bg-red-50 transition"
+            >
+              Remover
+            </button>
+          </div>
+        ))}
+      </div>
+
+      <div className="bg-gradient-to-r from-wedding-50 to-wedding-100 p-6 rounded-xl mb-6">
+        <div className="flex justify-between items-center mb-2">
+          <span className="text-gray-600">Itens</span>
+          <span className="text-gray-800">
+            {cartItems.reduce((acc, item) => acc + item.quantity, 0)}
+          </span>
+        </div>
+        <div className="border-t border-wedding-200 pt-4 flex justify-between items-center">
+          <span className="text-lg font-bold text-gray-800">Total</span>
+          <span className="text-2xl font-bold text-wedding-600">R$ {totalAmount.toFixed(2)}</span>
+        </div>
+      </div>
 
       <div className="mb-4">
         <input
@@ -140,27 +240,22 @@ function GiftCheckout() {
           value={buyerName}
           onChange={(e) => {
             setBuyerName(e.target.value);
-            if (nameError) setNameError(""); // Limpar erro ao digitar
+            if (nameError) {
+              setNameError("");
+            }
           }}
           className={`border-2 px-4 py-2 w-full rounded-lg transition-all ${
-            nameError 
-              ? "border-red-500 focus:ring-2 focus:ring-red-500 focus:border-red-500" 
+            nameError
+              ? "border-red-500 focus:ring-2 focus:ring-red-500 focus:border-red-500"
               : "border-gray-300 focus:ring-2 focus:ring-[#B24C60] focus:border-[#B24C60]"
           }`}
         />
-        {nameError && (
-          <p className="text-red-500 text-sm mt-2 text-left flex items-center gap-1">
-            <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-              <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
-            </svg>
-            {nameError}
-          </p>
-        )}
+        {nameError && <p className="text-red-500 text-sm mt-2 text-left">{nameError}</p>}
       </div>
 
       <Button
         onClick={handlePayment}
-        text={loading ? "Redirecionando..." : "Contribuir com este presente"}
+        text={loading ? "Redirecionando..." : "Ir para pagamento"}
         type="button"
         disabled={loading}
       />

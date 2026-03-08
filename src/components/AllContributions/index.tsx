@@ -22,6 +22,7 @@ interface Payment {
   createdAt: Timestamp;
   giftId: string;
   giftTitle: string;
+  items?: Array<{ title: string; quantity: number }>;
   mpPaymentId: string;
   status: "approved" | "pending" | "rejected" | "cancelled" | "error";
 }
@@ -117,6 +118,20 @@ function AllContributions() {
     return statusMap[status];
   };
 
+  const getPaymentTitle = (payment: Payment) => {
+    if (payment.giftTitle) {
+      return payment.giftTitle;
+    }
+
+    if (payment.items && payment.items.length > 0) {
+      return payment.items
+        .map((item) => `${item.title} x${item.quantity}`)
+        .join(", ");
+    }
+
+    return "Presente";
+  };
+
   const handleDelete = async () => {
     if (!selectedPaymentId) return;
 
@@ -185,7 +200,7 @@ function AllContributions() {
           >
             <div className="flex flex-col sm:flex-row justify-between gap-4">
               <div className="flex-1">
-                <p className="font-medium text-gray-700">{payment.giftTitle}</p>
+                <p className="font-medium text-gray-700">{getPaymentTitle(payment)}</p>
                 <p className="text-sm text-gray-500">
                   Comprador: {payment.buyerName} ({payment.buyerEmail})
                 </p>

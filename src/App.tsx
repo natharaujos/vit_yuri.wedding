@@ -37,6 +37,7 @@ function App() {
                     {/* <Reception /> */}
                     <OurHistory images={[photoSession, photoSession2, photoSession3, photoSession4, photoSession5]} />
                     <GiftList />
+                    <Footer />
                   </>
                 </ProtectedRoute>
               }
@@ -50,7 +51,15 @@ function App() {
               }
             />
             <Route
-              path="/gift/:id"
+              path="/gift/:id/options"
+              element={
+                <ProtectedRoute>
+                  <PaymentOptions />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/checkout"
               element={
                 <ProtectedRoute>
                   <GiftCheckout />
@@ -58,7 +67,7 @@ function App() {
               }
             />
             <Route
-              path="/gift/:id/options"
+              path="/checkout/options"
               element={
                 <ProtectedRoute>
                   <PaymentOptions />
@@ -133,7 +142,6 @@ function App() {
             />
           </Routes>
         </main>
-        <Footer />
       </div>
     </BrowserRouter>
   );

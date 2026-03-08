@@ -13,6 +13,7 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "../../../firebase";
 import { checkPaymentStatus } from "../../services/checkPaymentStatus";
 import { Link } from "react-router-dom";
+import { Dialog } from "@mui/material";
 
 interface Payment {
   id?: string; // Add id field for document reference
@@ -21,6 +22,12 @@ interface Payment {
   createdAt: Timestamp;
   giftId: string;
   giftTitle: string;
+  items?: Array<{
+    title: string;
+    quantity: number;
+    unitPrice?: number;
+    totalPrice?: number;
+  }>;
   mpPaymentId: string;
   status: "approved" | "pending" | "rejected" | "cancelled" | "error";
 }
@@ -28,6 +35,8 @@ interface Payment {
 export function MyContributions() {
   const [payments, setPayments] = useState<Payment[]>([]);
   const [loading, setLoading] = useState(true);
+  const [selectedPayment, setSelectedPayment] = useState<Payment | null>(null);
+  const [detailsOpen, setDetailsOpen] = useState(false);
   const [user] = useAuthState(auth);
 
   useEffect(() => {
@@ -120,6 +129,35 @@ export function MyContributions() {
     return statusMap[status];
   };
 
+  const getPaymentTitle = (payment: Payment) => {
+    if (payment.giftTitle) {
+      return payment.giftTitle;
+    }
+
+    if (payment.items && payment.items.length > 0) {
+      return payment.items
+        .map((item) => `${item.title} x${item.quantity}`)
+        .join(", ");
+    }
+
+    return "Presente";
+  };
+
+  const getTotalUnits = (payment: Payment) => {
+    if (!payment.items || payment.items.length === 0) {
+      return 1;
+    }
+
+    return payment.items.reduce((acc, item) => acc + (item.quantity || 0), 0);
+  };
+
+  const hasMultipleGifts = (payment: Payment) => getTotalUnits(payment) > 1;
+
+  const openDetailsModal = (payment: Payment) => {
+    setSelectedPayment(payment);
+    setDetailsOpen(true);
+  };
+
   return (
     <section className="max-w-4xl mx-auto px-4 py-12">
       <h2 className="text-2xl font-bold text-wedding-500 text-center mb-8">
@@ -129,11 +167,11 @@ export function MyContributions() {
       <div className="grid gap-4">
         {payments.map((payment, index) => (
           <div
-            key={index}
+            key={payment.id || index}
             className="bg-white rounded-lg shadow p-4 flex flex-col sm:flex-row justify-between gap-4"
           >
             <div className="flex-1">
-              <p className="font-medium text-gray-700">{payment.giftTitle}</p>
+              <p className="font-medium text-gray-700">{getPaymentTitle(payment)}</p>
               <p className="text-sm text-gray-500 mt-1">
                 Comprado em:{" "}
                 {payment.createdAt.toDate().toLocaleDateString("pt-BR", {
@@ -147,6 +185,14 @@ export function MyContributions() {
               <p className="text-sm text-gray-500">
                 Valor: R$ {payment.amount.toFixed(2)}
               </p>
+              {hasMultipleGifts(payment) && (
+                <button
+                  onClick={() => openDetailsModal(payment)}
+                  className="mt-3 text-sm font-semibold text-wedding-600 hover:text-wedding-700 transition-colors cursor-pointer"
+                >
+                  Ver detalhes da compra
+                </button>
+              )}
             </div>
             <div
               className={`${getStatusColor(
@@ -173,6 +219,61 @@ export function MyContributions() {
           Voltar para a página inicial
         </Link>
       </div>
+
+      <Dialog
+        open={detailsOpen}
+        onClose={() => setDetailsOpen(false)}
+        maxWidth="sm"
+        fullWidth
+        PaperProps={{
+          className: "rounded-2xl p-2",
+        }}
+      >
+        <div className="p-4 sm:p-6">
+          <h3 className="text-xl font-bold text-gray-800 mb-4">Detalhes da compra</h3>
+
+          {!selectedPayment?.items || selectedPayment.items.length === 0 ? (
+            <p className="text-gray-600">Nao ha detalhes de itens para esta compra.</p>
+          ) : (
+            <div className="space-y-3">
+              {selectedPayment.items.map((item, idx) => {
+                const lineTotal = item.totalPrice ?? (item.unitPrice || 0) * item.quantity;
+                return (
+                  <div
+                    key={`${item.title}-${idx}`}
+                    className="border border-gray-200 rounded-lg p-3 flex justify-between items-start gap-3"
+                  >
+                    <div>
+                      <p className="font-semibold text-gray-800">{item.title}</p>
+                      <p className="text-sm text-gray-500">Quantidade: {item.quantity}</p>
+                      {item.unitPrice !== undefined && (
+                        <p className="text-sm text-gray-500">Unitario: R$ {item.unitPrice.toFixed(2)}</p>
+                      )}
+                    </div>
+                    <p className="font-semibold text-gray-700">R$ {lineTotal.toFixed(2)}</p>
+                  </div>
+                );
+              })}
+            </div>
+          )}
+
+          <div className="mt-5 border-t border-gray-200 pt-4 flex justify-between items-center">
+            <p className="text-gray-600">Total da compra</p>
+            <p className="text-lg font-bold text-wedding-600">
+              R$ {(selectedPayment?.amount || 0).toFixed(2)}
+            </p>
+          </div>
+
+          <div className="mt-6 flex justify-end">
+            <button
+              onClick={() => setDetailsOpen(false)}
+              className="px-5 py-2 rounded-lg bg-gray-100 text-gray-700 hover:bg-gray-200 transition-colors"
+            >
+              Fechar
+            </button>
+          </div>
+        </div>
+      </Dialog>
     </section>
   );
 }

@@ -4,6 +4,8 @@ import { collection, getDocs } from "firebase/firestore";
 import { db } from "../../../firebase";
 import { useLoading } from "../../contexts/LoadingContext";
 import Button from "../Button/Button";
+import { useDispatch } from "react-redux";
+import { addToCart } from "../../store/cartSlice";
 
 interface Gift {
   id: string;
@@ -15,6 +17,7 @@ interface Gift {
 
 export default function GiftList() {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const { setLoadingWithDelay } = useLoading();
   const [gifts, setGifts] = useState<Gift[]>([]);
   const [loading, setLoading] = useState(true);
@@ -91,7 +94,15 @@ export default function GiftList() {
             <Button
               onClick={() => {
                 setLoadingWithDelay(true);
-                navigate(`/gift/${id}`);
+                dispatch(
+                  addToCart({
+                    giftId: id,
+                    title,
+                    image,
+                    price,
+                  })
+                );
+                navigate(`/checkout`);
                 setLoadingWithDelay(false);
               }}
               text="Presentear"

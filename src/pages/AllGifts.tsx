@@ -3,15 +3,19 @@ import { db } from "../../firebase";
 import { collection, getDocs } from "firebase/firestore";
 import type { Gift } from "../store/giftSlice";
 import StyledLoading from "../components/StyledLoading";
-import { Search, Filter, X } from "lucide-react";
+import { Search, Filter, X, ShoppingCart } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useLoading } from "../contexts/LoadingContext";
 import Pagination from "../components/Pagination";
+import { useDispatch, useSelector } from "react-redux";
+import { addToCart } from "../store/cartSlice";
+import type { RootState } from "../store";
 
 const ITEMS_PER_PAGE = 12;
 
 export default function AllGifts() {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const { setLoadingWithDelay } = useLoading();
   const [gifts, setGifts] = useState<(Gift & { firestoreId: string })[]>([]);
   const [filteredGifts, setFilteredGifts] = useState<(Gift & { firestoreId: string })[]>([]);
@@ -20,6 +24,7 @@ export default function AllGifts() {
   const [searchTerm, setSearchTerm] = useState("");
   const [priceFilter, setPriceFilter] = useState<"all" | "low" | "medium" | "high">("all");
   const [showFilters, setShowFilters] = useState(false);
+  const cartItems = useSelector((state: RootState) => state.cart.items);
 
   // Carregar presentes do Firebase
   useEffect(() => {
@@ -83,10 +88,24 @@ export default function AllGifts() {
     setLoadingWithDelay(false);
   };
 
+  const handleAddToCart = (gift: Gift & { firestoreId: string }) => {
+    dispatch(
+      addToCart({
+        giftId: gift.firestoreId,
+        title: gift.title,
+        image: gift.image,
+        price: gift.price,
+      })
+    );
+  };
+
   const clearFilters = () => {
     setSearchTerm("");
     setPriceFilter("all");
   };
+
+  const cartItemsCount = cartItems.reduce((acc, item) => acc + item.quantity, 0);
+  const cartTotal = cartItems.reduce((acc, item) => acc + item.price * item.quantity, 0);
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-white to-wedding-50 py-12 px-4 pt-32">
@@ -236,10 +255,18 @@ export default function AllGifts() {
                 </div>
 
                 <button
-                  onClick={() => handleGiftClick(gift.firestoreId)}
-                  className="inline-block px-6 py-3 font-semibold rounded-2xl shadow-md border transition duration-300 ease-in-out text-center cursor-pointer bg-[#B24C60] text-white hover:bg-[#CE6375] border-[#B24C60]"
+                  onClick={() => handleAddToCart(gift)}
+                  aria-label={`Adicionar ${gift.title} ao carrinho`}
+                  title="Adicionar ao carrinho"
+                  className="inline-flex items-center justify-center w-12 h-12 rounded-full shadow-md border transition duration-300 ease-in-out cursor-pointer bg-[#B24C60] text-white hover:bg-[#CE6375] border-[#B24C60]"
                 >
-                  Presentear
+                  <ShoppingCart size={20} />
+                </button>
+                <button
+                  onClick={() => handleGiftClick(gift.firestoreId)}
+                  className="inline-block mt-2 px-6 py-2 font-semibold rounded-2xl border transition duration-300 ease-in-out text-center cursor-pointer bg-white text-[#B24C60] hover:bg-wedding-50 border-[#B24C60]"
+                >
+                  Comprar agora
                 </button>
               </div>
             ))}
@@ -252,6 +279,25 @@ export default function AllGifts() {
           totalPages={totalPages}
           onPageChange={setCurrentPage}
         />
+
+        {cartItemsCount > 0 && (
+          <div className="sticky bottom-4 mt-8 z-10">
+            <div className="max-w-2xl mx-auto bg-white/95 backdrop-blur rounded-2xl shadow-xl border border-wedding-200 p-4 flex flex-col sm:flex-row items-center justify-between gap-3">
+              <div>
+                <p className="text-sm text-gray-500">Carrinho</p>
+                <p className="font-bold text-gray-800">
+                  {cartItemsCount} {cartItemsCount === 1 ? "item" : "itens"} - R$ {cartTotal.toFixed(2)}
+                </p>
+              </div>
+              <button
+                onClick={() => navigate("/checkout")}
+                className="px-6 py-3 font-semibold rounded-2xl shadow-md border transition duration-300 ease-in-out text-center cursor-pointer bg-[#B24C60] text-white hover:bg-[#CE6375] border-[#B24C60]"
+              >
+                Ir para o checkout
+              </button>
+            </div>
+          </div>
+        )}
 
         {/* Botão Voltar */}
         <div className="mt-12 text-center">

@@ -3,16 +3,18 @@ import { Link, useParams, useSearchParams } from "react-router-dom";
 import { checkPaymentStatus } from "../../services/checkPaymentStatus";
 import { doc, getDoc, updateDoc } from "firebase/firestore";
 import { db } from "../../../firebase";
+import { useDispatch } from "react-redux";
+import { clearCart } from "../../store/cartSlice";
 
 const validStatuses = ["approved", "pending", "rejected", "cancelled"] as const;
 type ValidStatus = (typeof validStatuses)[number];
 type PaymentStatus = ValidStatus | "loading" | "error";
 
 function PaymentSuccess() {
-  // this is not the one that is saved in the database, its the giftId. Need to change that.
   const { payment_id } = useParams();
   const [searchParams] = useSearchParams();
   const [status, setStatus] = useState<PaymentStatus>("loading");
+  const dispatch = useDispatch();
 
   useEffect(() => {
     const mpPaymentId = searchParams.get("payment_id");
@@ -37,7 +39,6 @@ function PaymentSuccess() {
           fallbackStatus &&
           validStatuses.includes(fallbackStatus as ValidStatus)
         ) {
-          // Get the payment data to access the giftId
           const paymentData = paymentDoc.data();
 
           await updateDoc(doc(db, "payments", payment_id), {
@@ -45,10 +46,28 @@ function PaymentSuccess() {
             mpPaymentId: mpPaymentId || "",
           });
 
-          if (fallbackStatus === "approved" && paymentData.giftId) {
-            await updateDoc(doc(db, "gifts", paymentData.giftId), {
-              buyedBy: paymentData.buyerEmail || "anonymous",
-            });
+          if (fallbackStatus === "approved") {
+            const giftIdsFromItems = Array.isArray(paymentData.items)
+              ? paymentData.items
+                  .map((item: { giftId?: string }) => item?.giftId)
+                  .filter(Boolean)
+              : [];
+
+            const giftIds = Array.isArray(paymentData.giftIds)
+              ? paymentData.giftIds
+              : paymentData.giftId
+                ? [paymentData.giftId]
+                : giftIdsFromItems;
+
+            await Promise.all(
+              giftIds.map((giftId: string) =>
+                updateDoc(doc(db, "gifts", giftId), {
+                  buyedBy: paymentData.buyerEmail || "anonymous",
+                })
+              )
+            );
+
+            dispatch(clearCart());
           }
 
           setStatus(fallbackStatus as PaymentStatus);
@@ -62,6 +81,11 @@ function PaymentSuccess() {
             status: result,
             mpPaymentId: mpPaymentId || "",
           });
+
+          if (result === "approved") {
+            dispatch(clearCart());
+          }
+
           setStatus(result as PaymentStatus);
         } else {
           setStatus("error");
@@ -73,7 +97,7 @@ function PaymentSuccess() {
     };
 
     check();
-  }, [payment_id, searchParams]);
+  }, [payment_id, searchParams, dispatch]);
 
   return (
     <div className="text-center py-20 px-4">
