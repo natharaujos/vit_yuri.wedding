@@ -254,20 +254,25 @@ export default function AllGifts() {
                   </div>
                 </div>
 
-                <button
-                  onClick={() => handleAddToCart(gift)}
-                  aria-label={`Adicionar ${gift.title} ao carrinho`}
-                  title="Adicionar ao carrinho"
-                  className="inline-flex items-center justify-center w-12 h-12 rounded-full shadow-md border transition duration-300 ease-in-out cursor-pointer bg-[#B24C60] text-white hover:bg-[#CE6375] border-[#B24C60]"
-                >
-                  <ShoppingCart size={20} />
-                </button>
-                <button
-                  onClick={() => handleGiftClick(gift.firestoreId)}
-                  className="inline-block mt-2 px-6 py-2 font-semibold rounded-2xl border transition duration-300 ease-in-out text-center cursor-pointer bg-white text-[#B24C60] hover:bg-wedding-50 border-[#B24C60]"
-                >
-                  Comprar agora
-                </button>
+                <div className="w-full mt-2 flex items-center justify-center gap-2">
+                  <button
+                    onClick={() => handleAddToCart(gift)}
+                    aria-label={`Adicionar ${gift.title} ao carrinho`}
+                    title="Adicionar ao carrinho"
+                    className="relative inline-flex items-center justify-center w-11 h-11 rounded-full shadow-md border transition duration-300 ease-in-out cursor-pointer bg-[#B24C60] text-white hover:bg-[#CE6375] border-[#B24C60]"
+                  >
+                    <ShoppingCart size={18} />
+                    <span className="absolute -top-1 -right-1 w-5 h-5 rounded-full bg-white text-[#B24C60] border border-[#B24C60] text-xs font-bold flex items-center justify-center leading-none">
+                      +
+                    </span>
+                  </button>
+                  <button
+                    onClick={() => handleGiftClick(gift.firestoreId)}
+                    className="inline-block px-4 py-2 font-semibold rounded-2xl border transition duration-300 ease-in-out text-center cursor-pointer bg-white text-[#B24C60] hover:bg-wedding-50 border-[#B24C60]"
+                  >
+                    Comprar agora
+                  </button>
+                </div>
               </div>
             ))}
           </div>
