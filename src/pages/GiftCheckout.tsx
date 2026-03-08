@@ -163,6 +163,15 @@ function GiftCheckout() {
     <div className="max-w-3xl mx-auto px-4 py-12 pt-32">
       <h2 className="text-3xl font-bold text-center mb-6">Seu carrinho</h2>
 
+      <div className="flex justify-center mb-6">
+        <button
+          onClick={() => navigate("/presentes")}
+          className="inline-block px-5 py-2 font-semibold rounded-2xl border transition duration-300 ease-in-out text-center cursor-pointer bg-white text-[#B24C60] hover:bg-wedding-50 border-[#B24C60]"
+        >
+          + Adicionar mais presentes
+        </button>
+      </div>
+
       <div className="space-y-4 mb-8">
         {cartItems.map((item) => (
           <div
