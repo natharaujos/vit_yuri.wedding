@@ -1,6 +1,4 @@
 import { useState } from "react";
-import { useAuthState } from "react-firebase-hooks/auth";
-import { auth } from "../../../firebase";
 import { savePresenceConfirmation } from "../../services/savePresenceConfirmation";
 import Button from "../Button/Button";
 import { ConfirmPresenceModal } from "../ConfirmPresence";
@@ -11,12 +9,11 @@ import photoSessionMobile from "../../assets/photo_session_3.jpeg";
 
 function Home() {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [user] = useAuthState(auth);
 
-  const handleConfirmPresence = (guests: number, guestNames: string[]) => {
+  const handleConfirmPresence = (guests: number, guestNames: string[], userName: string, userEmail: string) => {
     savePresenceConfirmation({
-      userName: user?.displayName || "",
-      userEmail: user?.email || "",
+      userName,
+      userEmail,
       guestsCount: guests,
       confirmedAt: new Date(),
       otherGuests: guestNames,
@@ -93,7 +90,6 @@ function Home() {
       <ConfirmPresenceModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
-        userEmail={user?.email || ""}
         onConfirm={handleConfirmPresence}
       />
     </>

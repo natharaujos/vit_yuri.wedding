@@ -7,7 +7,7 @@ import OurHistory from "./components/OurHistory/OurHistory";
 import GiftCheckout from "./pages/GiftCheckout";
 import PaymentSuccess from "./components/PaymentSuccess/PaymentSuccess";
 import ProtectedRoute from "./components/Auth/ProtectedRoute";
-import GoogleLogin from "./components/Auth/GoogleLogin";
+import AdminLogin from "./components/Auth/AdminLogin";
 import PaymentOptions from "./pages/PaymentOptions";
 import GiftsCRUD from "./pages/GiftsCRUD";
 import AllGifts from "./pages/AllGifts";
@@ -31,56 +31,34 @@ function App() {
             <Route
               path="/"
               element={
-                <ProtectedRoute>
-                  <>
-                    <Home />
-                    {/* <Reception /> */}
-                    <OurHistory images={[photoSession, photoSession2, photoSession3, photoSession4, photoSession5]} />
-                    <GiftList />
-                    <Footer />
-                  </>
-                </ProtectedRoute>
+                <>
+                  <Home />
+                  {/* <Reception /> */}
+                  <OurHistory images={[photoSession, photoSession2, photoSession3, photoSession4, photoSession5]} />
+                  <GiftList />
+                  <Footer />
+                </>
               }
             />
             <Route
               path="/gift/:id"
-              element={
-                <ProtectedRoute>
-                  <GiftCheckout />
-                </ProtectedRoute>
-              }
+              element={<GiftCheckout />}
             />
             <Route
               path="/gift/:id/options"
-              element={
-                <ProtectedRoute>
-                  <PaymentOptions />
-                </ProtectedRoute>
-              }
+              element={<PaymentOptions />}
             />
             <Route
               path="/checkout"
-              element={
-                <ProtectedRoute>
-                  <GiftCheckout />
-                </ProtectedRoute>
-              }
+              element={<GiftCheckout />}
             />
             <Route
               path="/checkout/options"
-              element={
-                <ProtectedRoute>
-                  <PaymentOptions />
-                </ProtectedRoute>
-              }
+              element={<PaymentOptions />}
             />
             <Route
               path="/payment/:payment_id"
-              element={
-                <ProtectedRoute>
-                  <PaymentSuccess />
-                </ProtectedRoute>
-              }
+              element={<PaymentSuccess />}
             />
             <Route
               path="/confirmeds"
@@ -92,11 +70,7 @@ function App() {
             />
             <Route
               path="/my-contributions"
-              element={
-                <ProtectedRoute>
-                  <MyContributions />
-                </ProtectedRoute>
-              }
+              element={<MyContributions />}
             />
             <Route
               path="/all-contributions"
@@ -130,15 +104,11 @@ function App() {
             />
             <Route
               path="/presentes"
-              element={
-                <ProtectedRoute>
-                  <AllGifts />
-                </ProtectedRoute>
-              }
+              element={<AllGifts />}
             />
             <Route
               path="/login"
-              element={<GoogleLogin onLogin={(user) => console.log(user)} />}
+              element={<AdminLogin />}
             />
           </Routes>
         </main>

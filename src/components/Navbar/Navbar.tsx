@@ -44,6 +44,11 @@ function Navbar() {
     onClick: () => navigate("/admin/gifts"),
   };
 
+  const loginAdmin = {
+    label: "Login Admin",
+    onClick: () => navigate("/login"),
+  };
+
   const logout = {
     label: "Sair",
     onClick: () => handleLogout(),
@@ -53,10 +58,9 @@ function Navbar() {
     navLinks.push(confirmedRoute);
     navLinks.push(allContributions);
     navLinks.push(giftsAdmin);
-  }
-
-  if (user) {
     navLinks.push(logout);
+  } else if (!user) {
+    navLinks.push(loginAdmin);
   }
 
   const handleLogout = async () => {

@@ -1,39 +1,38 @@
 import { useState, useEffect } from "react";
 import { Dialog } from "@mui/material";
 import { collection, query, where, getDocs } from "firebase/firestore";
-import { auth, db } from "../../../firebase";
-import { useAuthState } from "react-firebase-hooks/auth";
+import { db } from "../../../firebase";
 import Button from "../Button/Button";
 
 type ConfirmPresenceModalProps = {
   isOpen: boolean;
   onClose: () => void;
-  userEmail: string;
-  onConfirm: (guestsCount: number, guestNames: string[]) => void;
+  onConfirm: (guestsCount: number, guestNames: string[], userName: string, userEmail: string) => void;
 };
 
 export function ConfirmPresenceModal({
   isOpen,
   onClose,
-  userEmail,
   onConfirm,
 }: ConfirmPresenceModalProps) {
   const [guestsCount, setGuestsCount] = useState(1);
   const [guestNames, setGuestNames] = useState<string[]>([""]);
+  const [userName, setUserName] = useState("");
+  const [userEmail, setUserEmail] = useState("");
   const [loading, setLoading] = useState(false);
   const [alreadyConfirmed, setAlreadyConfirmed] = useState(false);
   const [noExtraGuests, setNoExtraGuests] = useState(false);
-  const [user] = useAuthState(auth);
+  const [emailError, setEmailError] = useState("");
 
   useEffect(() => {
     async function checkExistingConfirmation() {
-      if (!userEmail) return;
+      if (!userEmail || !userEmail.includes("@")) return;
 
       setLoading(true);
       try {
         const q = query(
           collection(db, "presenceConfirmations"),
-          where("userEmail", "==", userEmail),
+          where("userEmail", "==", userEmail.toLowerCase().trim()),
           where("addedByAdmin", "==", false)
         );
 
@@ -46,10 +45,8 @@ export function ConfirmPresenceModal({
       }
     }
 
-    if (isOpen) {
-      checkExistingConfirmation();
-    }
-  }, [userEmail, isOpen]);
+    checkExistingConfirmation();
+  }, [userEmail]);
 
   // Handle change in number of guests
   const handleGuestsCountChange = (count: number) => {
@@ -74,7 +71,16 @@ export function ConfirmPresenceModal({
 
   const handleConfirm = () => {
     if (alreadyConfirmed) return;
-    onConfirm(guestsCount + 1, guestNames);
+
+    // Validação de email
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(userEmail)) {
+      setEmailError("Por favor, informe um email válido.");
+      return;
+    }
+
+    setEmailError("");
+    onConfirm(guestsCount + 1, guestNames, userName, userEmail.toLowerCase().trim());
     onClose();
   };
 
@@ -109,9 +115,44 @@ export function ConfirmPresenceModal({
         </div>
 
         <div className="space-y-6">
-          <div className="bg-gradient-to-r from-[#F9E8EB] to-[#F3D1D6] p-4 rounded-xl">
-            <span className="text-gray-700 font-medium text-sm">Seu e-mail:</span>
-            <p className="text-[#B24C60] font-semibold mt-1">{userEmail}</p>
+          <div className="space-y-2">
+            <label htmlFor="userName" className="block text-gray-700 font-medium text-sm">
+              Seu nome
+            </label>
+            <input
+              id="userName"
+              type="text"
+              value={userName}
+              onChange={(e) => setUserName(e.target.value)}
+              required
+              placeholder="Digite seu nome completo"
+              className="w-full px-4 py-2 border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#B24C60] focus:border-[#B24C60] transition-all"
+            />
+          </div>
+
+          <div className="space-y-2">
+            <label htmlFor="userEmail" className="block text-gray-700 font-medium text-sm">
+              Seu email
+            </label>
+            <input
+              id="userEmail"
+              type="email"
+              value={userEmail}
+              onChange={(e) => {
+                setUserEmail(e.target.value);
+                if (emailError) {
+                  setEmailError("");
+                }
+              }}
+              required
+              placeholder="Digite seu email"
+              className={`w-full px-4 py-2 border-2 rounded-lg focus:outline-none focus:ring-2 transition-all ${
+                emailError
+                  ? "border-red-500 focus:ring-red-500"
+                  : "border-gray-300 focus:ring-[#B24C60] focus:border-[#B24C60]"
+              }`}
+            />
+            {emailError && <p className="text-red-500 text-sm">{emailError}</p>}
           </div>
 
           {loading ? (
@@ -168,14 +209,6 @@ export function ConfirmPresenceModal({
                   </label>
                 </div>
               </div>
-
-              <input
-                type="text"
-                value={user?.displayName || ""}
-                required
-                disabled
-                className="w-full px-4 py-2 border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#B24C60] focus:border-[#B24C60] bg-gray-50 font-medium"
-              />
 
               {/* Guest names */}
               {!noExtraGuests && (

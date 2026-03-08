@@ -9,8 +9,6 @@ import {
   updateDoc,
 } from "firebase/firestore";
 import { db } from "../../../firebase";
-import { useAuthState } from "react-firebase-hooks/auth";
-import { auth } from "../../../firebase";
 import { checkPaymentStatus } from "../../services/checkPaymentStatus";
 import { Link } from "react-router-dom";
 import { Dialog } from "@mui/material";
@@ -34,75 +32,86 @@ interface Payment {
 
 export function MyContributions() {
   const [payments, setPayments] = useState<Payment[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [selectedPayment, setSelectedPayment] = useState<Payment | null>(null);
   const [detailsOpen, setDetailsOpen] = useState(false);
-  const [user] = useAuthState(auth);
+  const [email, setEmail] = useState("");
+  const [emailError, setEmailError] = useState("");
+  const [searched, setSearched] = useState(false);
 
-  useEffect(() => {
-    async function fetchAndUpdatePayments() {
-      if (!user?.email) return;
-
-      try {
-        const q = query(
-          collection(db, "payments"),
-          where("buyerEmail", "==", user.email)
-        );
-        const querySnapshot = await getDocs(q);
-
-        const myPayments: Payment[] = [];
-        const updatePromises: Promise<void>[] = [];
-
-        for (const item of querySnapshot.docs) {
-          const data = { ...item.data(), id: item.id } as Payment;
-          myPayments.push(data);
-
-          // Only check status for payments that have an mpPaymentId and are not approved
-          if (data.mpPaymentId && data.status !== "approved") {
-            const statusCheckPromise = async () => {
-              try {
-                const newStatus = await checkPaymentStatus(data.mpPaymentId);
-                if (newStatus !== data.status) {
-                  console.log(
-                    `Updating payment ${data.id} status to ${newStatus}`
-                  );
-                  await updateDoc(doc(db, "payments", data?.id || ""), {
-                    status: newStatus,
-                  });
-                  // Update local state
-                  data.status = newStatus;
-                }
-              } catch (error) {
-                console.error(
-                  `Error checking status for payment ${data.id}:`,
-                  error
-                );
-              }
-            };
-            updatePromises.push(statusCheckPromise());
-          }
-        }
-
-        // Wait for all status updates to complete
-        await Promise.all(updatePromises);
-        setPayments(myPayments);
-      } catch (error) {
-        console.error("Error fetching payments:", error);
-      } finally {
-        setLoading(false);
-      }
+  const handleSearch = async () => {
+    if (!email.trim()) {
+      setEmailError("Por favor, informe seu email.");
+      return;
     }
 
-    fetchAndUpdatePayments();
-  }, [user?.email]);
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      setEmailError("Por favor, informe um email válido.");
+      return;
+    }
 
-  if (loading) {
-    return (
-      <div className="flex justify-center items-center p-8">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-wedding-500"></div>
-      </div>
-    );
-  }
+    setEmailError("");
+    setLoading(true);
+    setSearched(true);
+
+    try {
+      const q = query(
+        collection(db, "payments"),
+        where("buyerEmail", "==", email.toLowerCase().trim())
+      );
+      const querySnapshot = await getDocs(q);
+
+      const myPayments: Payment[] = [];
+      const updatePromises: Promise<void>[] = [];
+
+      for (const item of querySnapshot.docs) {
+        const data = { ...item.data(), id: item.id } as Payment;
+        myPayments.push(data);
+
+        // Only check status for payments that have an mpPaymentId and are not approved
+        if (data.mpPaymentId && data.status !== "approved") {
+          const statusCheckPromise = async () => {
+            try {
+              const newStatus = await checkPaymentStatus(data.mpPaymentId);
+              if (newStatus !== data.status) {
+                console.log(
+                  `Updating payment ${data.id} status to ${newStatus}`
+                );
+                await updateDoc(doc(db, "payments", data?.id || ""), {
+                  status: newStatus,
+                });
+                // Update local state
+                data.status = newStatus;
+              }
+            } catch (error) {
+              console.error(
+                `Error checking status for payment ${data.id}:`,
+                error
+              );
+            }
+          };
+          updatePromises.push(statusCheckPromise());
+        }
+      }
+
+      // Wait for all status updates to complete
+      await Promise.all(updatePromises);
+      setPayments(myPayments);
+    } catch (error) {
+      console.error("Error fetching payments:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    // Try to load email from localStorage on mount
+    const savedEmail = localStorage.getItem("buyerEmail");
+    if (savedEmail) {
+      setEmail(savedEmail);
+    }
+  }, []);
 
   const getStatusColor = (status: Payment["status"]) => {
     switch (status) {
@@ -159,12 +168,56 @@ export function MyContributions() {
   };
 
   return (
-    <section className="max-w-4xl mx-auto px-4 py-12">
+    <section className="max-w-4xl mx-auto px-4 py-12 pt-32">
       <h2 className="text-2xl font-bold text-wedding-500 text-center mb-8">
         Minhas Contribuições
       </h2>
 
-      <div className="grid gap-4">
+      {/* Email input form */}
+      <div className="bg-white rounded-lg shadow-md p-6 mb-8">
+        <p className="text-gray-700 mb-4">
+          Digite seu email para consultar suas contribuições:
+        </p>
+        <div className="flex flex-col sm:flex-row gap-3">
+          <input
+            type="email"
+            placeholder="Seu email"
+            value={email}
+            onChange={(e) => {
+              setEmail(e.target.value);
+              if (emailError) {
+                setEmailError("");
+              }
+            }}
+            onKeyPress={(e) => {
+              if (e.key === "Enter") {
+                handleSearch();
+              }
+            }}
+            className={`flex-1 border-2 px-4 py-2 rounded-lg transition-all ${
+              emailError
+                ? "border-red-500 focus:ring-2 focus:ring-red-500 focus:border-red-500"
+                : "border-gray-300 focus:ring-2 focus:ring-[#B24C60] focus:border-[#B24C60]"
+            }`}
+          />
+          <button
+            onClick={handleSearch}
+            disabled={loading}
+            className={`px-6 py-2 rounded-lg font-semibold text-white transition ${
+              loading
+                ? "bg-gray-400 cursor-not-allowed"
+                : "bg-wedding-500 hover:bg-wedding-600"
+            }`}
+          >
+            {loading ? "Buscando..." : "Buscar"}
+          </button>
+        </div>
+        {emailError && <p className="text-red-500 text-sm mt-2">{emailError}</p>}
+      </div>
+
+      {/* Results section - only show after search */}
+      {searched && (
+        <div className="grid gap-4">
         {payments.map((payment, index) => (
           <div
             key={payment.id || index}
@@ -206,10 +259,11 @@ export function MyContributions() {
 
         {payments.length === 0 && (
           <p className="text-center text-gray-500">
-            Você ainda não contribuiu com nenhum presente.
+            Nenhuma contribuição encontrada para este email.
           </p>
         )}
-      </div>
+        </div>
+      )}
 
       <div className="flex justify-end">
         <Link
