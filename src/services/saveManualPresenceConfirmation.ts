@@ -1,5 +1,6 @@
 import { db } from "../../firebase";
 import { collection, addDoc } from "firebase/firestore";
+import type { FamilyMemberPayment } from "../types/presence";
 
 export interface ManualPresenceConfirmation {
   userName: string;
@@ -10,6 +11,7 @@ export interface ManualPresenceConfirmation {
   otherGuests: string[];
   status: "confirmed" | "canceled";
   addedByAdmin: boolean;
+  familyMembers?: FamilyMemberPayment[];
 }
 
 export async function saveManualPresenceConfirmation(
