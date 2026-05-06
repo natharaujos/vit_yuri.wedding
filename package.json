@@ -8,7 +8,8 @@
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "migrate-gifts": "tsx src/scripts/migrateGifts.ts"
+    "migrate-gifts": "tsx src/scripts/migrateGifts.ts",
+    "reconcile:single": "tsx src/scripts/reconcileSinglePending.ts"
   },
   "dependencies": {
     "@emotion/react": "^11.14.0",
@@ -49,6 +50,7 @@
     "eslint-plugin-react-refresh": "^0.4.19",
     "globals": "^16.0.0",
     "tailwindcss": "^4.1.8",
+    "tsx": "^4.21.0",
     "tw-animate-css": "^1.3.8",
     "typescript": "~5.8.3",
     "typescript-eslint": "^8.30.1",
