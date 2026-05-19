@@ -36,11 +36,11 @@ export function PrintGuestListModal({
     });
 
     const handlePrint = () => {
-    if (!printRef.current) return;
+        if (!printRef.current) return;
 
-    // Criar estilo para impressão que mantém só o conteúdo formatado
-    const style = document.createElement('style');
-    style.textContent = `
+        // Criar estilo para impressão que mantém só o conteúdo formatado
+        const style = document.createElement('style');
+        style.textContent = `
       @media print {
         * {
           visibility: hidden;
@@ -224,17 +224,17 @@ export function PrintGuestListModal({
         }
       }
     `;
-    document.head.appendChild(style);
+        document.head.appendChild(style);
 
-    // Adicionar classe ao printRef para identificar na impressão
-    printRef.current.classList.add('print-content-wrapper');
+        // Adicionar classe ao printRef para identificar na impressão
+        printRef.current.classList.add('print-content-wrapper');
 
-    // Imprimir
-    setTimeout(() => {
-      window.print();
-      // Limpar após impressão
-      setTimeout(() => {
-        printRef.current?.classList.remove('print-content-wrapper');
+        // Imprimir
+        setTimeout(() => {
+            window.print();
+            // Limpar após impressão
+            setTimeout(() => {
+                printRef.current?.classList.remove('print-content-wrapper');
             }, 100);
         }, 100);
     };
@@ -316,10 +316,10 @@ export function PrintGuestListModal({
                                                                 • {member.name}
                                                                 <span
                                                                     className={`member-status ${member.paymentStatus === "paid"
-                                                                            ? "paid"
-                                                                            : member.paymentStatus === "pending"
-                                                                                ? "pending"
-                                                                                : "courtesy"
+                                                                        ? "paid"
+                                                                        : member.paymentStatus === "pending"
+                                                                            ? "pending"
+                                                                            : "courtesy"
                                                                         }`}
                                                                 >
                                                                     {statusMap[member.paymentStatus]}
@@ -379,10 +379,10 @@ export function PrintGuestListModal({
                                                                 • {member.name}
                                                                 <span
                                                                     className={`member-status ${member.paymentStatus === "paid"
-                                                                            ? "paid"
-                                                                            : member.paymentStatus === "pending"
-                                                                                ? "pending"
-                                                                                : "courtesy"
+                                                                        ? "paid"
+                                                                        : member.paymentStatus === "pending"
+                                                                            ? "pending"
+                                                                            : "courtesy"
                                                                         }`}
                                                                 >
                                                                     {statusMap[member.paymentStatus]}
