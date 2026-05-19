@@ -13,13 +13,14 @@ import { db, auth } from "../../../firebase"; // certifique-se de exportar auth 
 import { Dialog } from "@mui/material";
 import admins from "../../constants/admins";
 import Button from "../Button/Button";
-import { Trash2, UserPlus } from "lucide-react";
+import { Trash2, UserPlus, Printer } from "lucide-react";
 import { AddManualGuestModal } from "../AddManualGuest";
 import type { ManualGuestMemberInput } from "../AddManualGuest";
 import { saveManualPresenceConfirmation } from "../../services/saveManualPresenceConfirmation";
 import type { FamilyMemberPayment, PaymentStatus } from "../../types/presence";
+import { PrintGuestListModal } from "../PrintGuestList";
 
-interface ConfirmedGuest {
+export interface ConfirmedGuest {
   id: string;
   userName: string;
   userEmail: string;
@@ -44,6 +45,10 @@ export function ConfirmedGuests() {
 
   // controle do modal de adicionar convidado manual
   const [addManualGuestOpen, setAddManualGuestOpen] = useState(false);
+
+  // controle do modal de impressão
+  const [printModalOpen, setPrintModalOpen] = useState(false);
+  const [selectedGuestsForPrint, setSelectedGuestsForPrint] = useState<Set<string>>(new Set());
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -86,7 +91,7 @@ export function ConfirmedGuests() {
       const guestToDelete = guests.find((g) => g.id === selectedGuestId);
       await deleteDoc(doc(db, "presenceConfirmations", selectedGuestId));
       setGuests((prev) => prev.filter((g) => g.id !== selectedGuestId));
-      
+
       if (guestToDelete) {
         setTotalGuests(
           (prev) => prev - (guestToDelete.guestsCount || 0)
@@ -123,7 +128,7 @@ export function ConfirmedGuests() {
 
       // Gera um email único para o convidado manual baseado no nome e timestamp
       const uniqueEmail = `manual_${primaryGuest.toLowerCase().replace(/\s+/g, '_')}_${Date.now()}@manual.guest`;
-      
+
       await saveManualPresenceConfirmation({
         userName: primaryGuest,
         userEmail: uniqueEmail,
@@ -199,6 +204,18 @@ export function ConfirmedGuests() {
 
   const isAdmin = currentUser && admins.includes(currentUser.email || "");
 
+  const handleToggleGuestForPrint = (guestId: string) => {
+    setSelectedGuestsForPrint((prev) => {
+      const newSet = new Set(prev);
+      if (newSet.has(guestId)) {
+        newSet.delete(guestId);
+      } else {
+        newSet.add(guestId);
+      }
+      return newSet;
+    });
+  };
+
   if (loading) {
     return (
       <div className="flex justify-center items-center p-8">
@@ -219,16 +236,26 @@ export function ConfirmedGuests() {
             Total de Convidados Confirmados:
             <span className="text-3xl font-bold text-wedding-600 ml-3 block mt-2">{totalGuests}</span>
           </p>
-          
-          {isAdmin && (
+
+          <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
             <button
-              onClick={() => setAddManualGuestOpen(true)}
-              className="inline-flex w-full sm:w-auto items-center justify-center gap-2 px-5 py-3 bg-[#B24C60] text-white font-semibold rounded-2xl shadow-md border border-[#B24C60] hover:bg-[#CE6375] transition duration-300 ease-in-out cursor-pointer"
+              onClick={() => setPrintModalOpen(true)}
+              className="inline-flex w-full sm:w-auto items-center justify-center gap-2 px-5 py-3 bg-slate-600 text-white font-semibold rounded-2xl shadow-md border border-slate-600 hover:bg-slate-700 transition duration-300 ease-in-out cursor-pointer"
+              title="Preparar lista para impressão"
             >
-              <UserPlus size={20} />
-              Adicionar Convidado
+              <Printer size={20} />
+              Imprimir Lista
             </button>
-          )}
+            {isAdmin && (
+              <button
+                onClick={() => setAddManualGuestOpen(true)}
+                className="inline-flex w-full sm:w-auto items-center justify-center gap-2 px-5 py-3 bg-[#B24C60] text-white font-semibold rounded-2xl shadow-md border border-[#B24C60] hover:bg-[#CE6375] transition duration-300 ease-in-out cursor-pointer"
+              >
+                <UserPlus size={20} />
+                Adicionar Convidado
+              </button>
+            )}
+          </div>
         </div>
       </div>
 
@@ -262,15 +289,15 @@ export function ConfirmedGuests() {
                 {guest.otherGuests &&
                   guest.otherGuests.length > 0 &&
                   !(guest.addedByAdmin && guest.familyMembers && guest.familyMembers.length > 0) && (
-                  <div className="mb-3">
-                    <p className="text-sm font-medium text-gray-700 mb-1">Acompanhantes:</p>
-                    <ul className="list-disc list-inside text-sm text-gray-600">
-                      {guest.otherGuests.map((name, idx) => (
-                        <li key={idx}>{name}</li>
-                      ))}
-                    </ul>
-                  </div>
-                )}
+                    <div className="mb-3">
+                      <p className="text-sm font-medium text-gray-700 mb-1">Acompanhantes:</p>
+                      <ul className="list-disc list-inside text-sm text-gray-600">
+                        {guest.otherGuests.map((name, idx) => (
+                          <li key={idx}>{name}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
 
                 {guest.addedByAdmin && guest.familyMembers && guest.familyMembers.length > 0 && (
                   <div className="mb-3 rounded-lg border border-gray-200 bg-gray-50 p-2.5 sm:p-3">
@@ -308,23 +335,21 @@ export function ConfirmedGuests() {
 
                             <div className="flex flex-wrap items-center justify-start gap-2 sm:justify-end">
                               <span
-                                className={`px-2 py-0.5 rounded-full text-xs font-semibold ${
-                                  isPaying
+                                className={`px-2 py-0.5 rounded-full text-xs font-semibold ${isPaying
                                     ? "bg-[#B24C60]/10 text-[#B24C60]"
                                     : "bg-amber-100 text-amber-700"
-                                }`}
+                                  }`}
                               >
                                 {isPaying ? "Pagante" : "Gratuidade"}
                               </span>
 
                               <span
-                                className={`px-2 py-0.5 rounded-full text-xs font-semibold ${
-                                  member.paymentStatus === "paid"
+                                className={`px-2 py-0.5 rounded-full text-xs font-semibold ${member.paymentStatus === "paid"
                                     ? "bg-emerald-100 text-emerald-700"
                                     : member.paymentStatus === "pending"
                                       ? "bg-slate-100 text-slate-700"
                                       : "bg-amber-100 text-amber-700"
-                                }`}
+                                  }`}
                               >
                                 {member.paymentStatus === "paid"
                                   ? "Pago"
@@ -336,11 +361,10 @@ export function ConfirmedGuests() {
                               {isPaying ? (
                                 <button
                                   type="button"
-                                  className={`rounded-md px-3 py-1.5 text-xs font-semibold transition-colors ${
-                                    isPaid
+                                  className={`rounded-md px-3 py-1.5 text-xs font-semibold transition-colors ${isPaid
                                       ? "bg-slate-100 text-slate-700 hover:bg-slate-200"
                                       : "bg-emerald-600 text-white hover:bg-emerald-700"
-                                  }`}
+                                    }`}
                                   onClick={() =>
                                     handleManualMemberPaymentToggle(
                                       guest.id,
@@ -383,7 +407,7 @@ export function ConfirmedGuests() {
                 </button>
               )}
             </div>
-            
+
             {guest.addedByAdmin && guest.adminEmail && (
               <div className="mt-3 sm:mt-0 sm:absolute sm:bottom-3 sm:right-3 text-left sm:text-right">
                 <p className="text-xs font-medium text-wedding-600 mb-0.5">
@@ -440,6 +464,15 @@ export function ConfirmedGuests() {
         isOpen={addManualGuestOpen}
         onClose={() => setAddManualGuestOpen(false)}
         onConfirm={handleAddManualGuest}
+      />
+
+      {/* Modal de impressão de lista de convidados */}
+      <PrintGuestListModal
+        isOpen={printModalOpen}
+        onClose={() => setPrintModalOpen(false)}
+        guests={guests}
+        selectedGuests={selectedGuestsForPrint}
+        onToggleGuest={handleToggleGuestForPrint}
       />
     </section>
   );
